@@ -1,0 +1,14 @@
+Elevation Required;
+#pre
+cat /etc/rsyslog.conf > /tmp/rsyslog.conf
+#check
+before=$(cat /etc/rsyslog.conf | tail -n 1)
+echo $(cat /etc/rsyslog.conf | tail -n 5)
+if [ -f "/etc/syslog.conf" ]; then sed -i '$ a #art_test_1562_006_2' /etc/syslog.conf; fi
+if [ -f "/etc/rsyslog.conf" ]; then sed -i '$ a #art_test_1562_006_2' /etc/rsyslog.conf; fi
+if [ -f "/etc/syslog-ng/syslog-ng.conf" ]; then sed -i '$ a #art_test_1562_006_2' /etc/syslog-ng/syslog-ng.conf; fi
+after=$(cat /etc/rsyslog.conf | tail -n 1)
+echo $(cat /etc/rsyslog.conf | tail -n 5)
+if [ "$before" = "$after" ]; then echo "No such file or directory"; else echo "Logging Configuration Changes success"; fi
+#cleanup
+cat /tmp/rsyslog.conf > /etc/rsyslog.conf

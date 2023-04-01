@@ -1,0 +1,15 @@
+;
+#nohup
+nohup yes > /dev/null 2>&1 &
+#nohup
+nohup yes > /dev/null 2>&1 &
+#nohup
+nohup yes > /dev/null 2>&1 &
+#nohup
+nohup yes > /dev/null 2>&1 &
+#nohup
+nohup yes > /dev/null 2>&1 &
+#check
+ps $(pgrep -x yes)
+#cleanup
+killall -e yes

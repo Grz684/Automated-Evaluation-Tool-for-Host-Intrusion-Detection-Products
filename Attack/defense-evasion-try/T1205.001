@@ -1,0 +1,19 @@
+;
+#pre
+gcc /home/ubuntu/attack/knock-knock.c -o /tmp/knock-knock
+sudo chown root:root /tmp/knock-knock
+sudo chmod 700 /tmp/knock-knock
+sudo mv /tmp/knock-knock /usr/bin/
+echo "sshd: ALL" | sudo tee -a /etc/hosts.deny
+#command
+sudo /usr/bin/knock-knock
+#check检查这里有待商榷
+before=$(ssh ubuntu@localhost -p 22)
+ssh ubuntu@localhost -p 8000
+ssh ubuntu@localhost -p 9000
+after=$(ssh ubuntu@localhost -p 22)
+#cleanup
+sudo sed -i '/sshd: ALL/d' /etc/hosts.deny
+sudo killall knock-knock
+sudo rm /usr/bin/knock-knock
+

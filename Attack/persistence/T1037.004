@@ -1,0 +1,13 @@
+Elevation Required;
+#command
+filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi
+printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.local
+echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMubG9jYWwgPiAvdG1wL1QxMDM3LjAwNC5yYy5sb2NhbCcpCgo='))\"" | sudo tee -a /etc/rc.local
+printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
+sudo chmod +x /etc/rc.local
+#check
+echo "/etc/rc.local:"
+cat /etc/rc.local
+if [ -z "$(cat /etc/rc.local)" ]; then echo "No such file or directory"; else echo "<Modify rc.local success>"; fi;
+#cleanup
+ls

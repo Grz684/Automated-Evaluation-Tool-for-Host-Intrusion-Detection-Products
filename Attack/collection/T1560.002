@@ -1,0 +1,8 @@
+Elevation Required;
+#command
+which_python=$(which python || which python3 || which python2)
+$which_python -c "from zipfile import ZipFile; ZipFile('/tmp/shadow', mode='w').write('/etc/shadow')"
+#check
+file /tmp/shadow
+#cleanup
+rm -f /tmp/shadow

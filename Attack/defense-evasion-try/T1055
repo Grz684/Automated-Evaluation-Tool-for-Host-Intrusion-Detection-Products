@@ -1,0 +1,4 @@
+git clone https://github.com/W3ndige/linux-process-injection.git
+开一个ssh，运行sample程序
+开另一个ssh，运行inject程序（需提权），sample程序被劫持
+

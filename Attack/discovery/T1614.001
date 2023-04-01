@@ -1,0 +1,7 @@
+;
+#check
+env | grep LANG
+printenv LANG
+set | grep LANG
+#cleanup
+ls

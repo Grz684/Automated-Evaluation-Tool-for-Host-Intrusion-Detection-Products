@@ -1,0 +1,9 @@
+Elevation Required;
+#command
+systemctl stop rsyslog ; systemctl disable rsyslog
+#check
+status=$(systemctl status rsyslog | sed -n 3p | awk '{print $2}')
+systemctl status rsyslog
+if [ $status = "active" ]; then echo "No such file or directory"; else echo "stop rsyslog success"; fi;
+#cleanup
+systemctl start rsyslog ; systemctl enable rsyslog

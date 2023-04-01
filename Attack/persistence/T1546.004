@@ -1,0 +1,9 @@
+Elevation Required;
+#command
+echo '# attack test T1546.004' >> /etc/profile
+#check
+echo "/etc/profile:"
+cat /etc/profile | tail -n 5
+if [ "$(cat /etc/profile | tail -n 1)" = "# attack test T1546.004" ]; then echo "Append to the system shell profile success"; else echo "No such file or directory"; fi;
+#cleanup
+sed -i "\,# attack test T1546.004,d" /etc/profile

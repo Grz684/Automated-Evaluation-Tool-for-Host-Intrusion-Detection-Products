@@ -1,0 +1,11 @@
+Elevation Required;
+#pre
+cat /etc/sudoers > /tmp/sudoers
+#command
+sh -c "echo Defaults "'!'"tty_tickets >> /etc/sudoers"
+visudo -c -f /etc/sudoers
+#check
+cat /etc/sudoers | tail -n 10
+#cleanup
+cat /tmp/sudoers > /etc/sudoers
+rm -f /tmp/sudoers

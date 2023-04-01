@@ -1,0 +1,18 @@
+Elevation Required;
+#command
+which_ccencrypt=`which ccencrypt`
+which_ccdecrypt=`which ccdecrypt`
+cp /etc/passwd /tmp/passwd
+$which_ccencrypt -K 1234 /etc/passwd
+file /etc/passwd.cpt
+#check
+result=$(cat /etc/passwd)
+echo "/etc/passwd:"
+echo $result
+echo "file /etc/passwd.cpt:"
+echo $(file /etc/passwd.cpt)
+if [ -z "$result" ]; then echo "Data Encrypted success"; else echo ""; fi;
+#cleanup
+rm -f /etc/passwd.cpt
+mv /tmp/passwd /etc/passwd
+chmod 644 /etc/passwd

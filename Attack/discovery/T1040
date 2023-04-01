@@ -1,0 +1,10 @@
+Elevation Required;Waiting Required;
+#pre
+if [ -f "/tmp/t1040_linux_pcapdemo" ]; then echo yes; else cc /home/ubuntu/atomic-red-team-master/atomics/T1040/src/linux_pcapdemo.c -o /tmp/t1040_linux_pcapdemo; fi
+#command
+nohup /tmp/t1040_linux_pcapdemo -a -f -t 10 > /tmp/linux_pcapdemo_log &
+#check
+cat /tmp/linux_pcapdemo_log
+#cleanup
+rm /tmp/linux_pcapdemo_log
+rm /tmp/t1040_linux_pcapdemo

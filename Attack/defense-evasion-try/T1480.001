@@ -1,0 +1,2 @@
+python3 T1480.001.py encrypt <input> <output> <target_ip>
+python3 T1480.001.py decrypt <input> <output>

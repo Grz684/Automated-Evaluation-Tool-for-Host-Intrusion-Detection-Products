@@ -1,0 +1,12 @@
+;
+#pre
+cp /home/ubuntu/atomic-red-team-master/atomics/T1027.001/src/test /tmp/test
+#check
+sha1=$(sha1sum /home/ubuntu/atomic-red-team-master/atomics/T1027.001/src/test)
+dd if=/dev/zero bs=1 count=1 >> /home/ubuntu/atomic-red-team-master/atomics/T1027.001/src/test
+sha2=$(sha1sum /home/ubuntu/atomic-red-team-master/atomics/T1027.001/src/test)
+echo $sha1
+echo $sha2
+if [ "$sha1" = "$sha2" ]; then echo "No such file or directory"; else echo "Binary Padding success"; fi;
+#cleanup
+mv /tmp/test /home/ubuntu/atomic-red-team-master/atomics/T1027.001/src/test

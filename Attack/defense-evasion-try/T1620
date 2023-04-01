@@ -1,0 +1,10 @@
+git clone https://github.com/guitmz/ezuri.git
+sudo apt  install golang-go
+go build -o ezuri
+./ezuri  #这里手动输入的参数需要自动化
+vim test_ezuri.c  #测试文件还要修改一下
+gcc test_ezuri.c -o test_ezuri
+chmod u+x cryptedDemon
+./cryptedDemon
+ps -f $(pidof DEMON)
+kill $(pidof DEMON)

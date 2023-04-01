@@ -1,0 +1,4 @@
+gcc -o target_program target_program.c
+gcc -shared -fPIC -o myhook.so myhook.c
+export LD_PRELOAD=/home/ubuntu/attack/myhook.so
+./target_program

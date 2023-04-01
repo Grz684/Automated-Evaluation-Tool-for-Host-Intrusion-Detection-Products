@@ -1,0 +1,5 @@
+;
+#check
+netstat; who -a
+#cleanup
+ls

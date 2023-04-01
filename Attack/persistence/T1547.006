@@ -1,0 +1,15 @@
+Elevation Required;
+#pre
+if [ ! -d /tmp/T1547.006 ]; then mkdir /tmp/T1547.006; touch /tmp/T1547.006/safe_to_delete; fi;
+cp /home/ubuntu/atomic-red-team-master/atomics/T1547.006/src/* /tmp/T1547.006/
+cd /tmp/T1547.006; make
+#command
+if [ ! -f /tmp/T1547.006/T1547006.ko ]; then exit ; fi;
+sudo insmod /tmp/T1547.006/T1547006.ko
+#check
+echo "lsmod:"
+lsmod | grep T1547006
+if [ -z "$(lsmod | grep T1547006)" ]; then echo "No such file or directory"; else echo "Load Kernel Module via insmod success"; fi;
+#cleanup
+sudo rmmod T1547006
+[ -f /tmp/T1547.006/safe_to_delete ] && rm -rf /tmp/T1547.006

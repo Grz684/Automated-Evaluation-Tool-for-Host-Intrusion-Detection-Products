@@ -1,0 +1,5 @@
+;
+#check
+systemctl --type=service
+#cleanup
+ls

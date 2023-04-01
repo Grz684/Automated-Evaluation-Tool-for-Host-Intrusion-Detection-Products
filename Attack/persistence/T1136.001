@@ -1,0 +1,5 @@
+Elevation Required;
+#command
+useradd -M -N -r -s /bin/bash -c evil_account evil_user
+#cleanup
+userdel #{username}

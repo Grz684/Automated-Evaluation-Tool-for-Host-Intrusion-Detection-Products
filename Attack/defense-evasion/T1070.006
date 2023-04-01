@@ -1,0 +1,14 @@
+Elevation Required;
+#pre
+touch /home/ubuntu/test
+#check
+before=$(stat /etc/passwd | sed -n 6p)
+touch -acmr /home/ubuntu/test /etc/passwd
+after=$(stat /etc/passwd | sed -n 6p)
+echo "timestamps before:"
+echo $before
+echo "timestamps after:"
+echo $after
+if [ "$before" = "$after" ]; then echo "No such file or directory"; else echo "modify timestamps success"; fi;
+#cleanup
+rm -f /home/ubuntu/test

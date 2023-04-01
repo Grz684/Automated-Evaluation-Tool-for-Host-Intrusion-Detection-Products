@@ -1,0 +1,8 @@
+Elevation Required;
+#command
+zip /tmp/shadow_zip /etc/shadow
+#check
+echo "file /tmp/shadow_zip.zip:"
+file /tmp/shadow_zip.zip 2>/dev/null
+#cleanup
+rm -f /tmp/shadow_zip.zip

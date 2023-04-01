@@ -1,0 +1,8 @@
+Elevation Required;
+#command
+cat /home/ubuntu/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
+#check
+cat /root/.ssh/authorized_keys
+if [ -z $(cat /root/.ssh/authorized_keys) ];then echo "No such file or directory";else echo "Modify authorized_keys success"; fi;
+#cleanup
+rm -f /root/.ssh/authorized_keys

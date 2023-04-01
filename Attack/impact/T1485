@@ -1,0 +1,13 @@
+Elevation Required;
+#pre
+cat /var/log/syslog > /tmp/syslog
+#command
+dd of=/var/log/syslog if=/dev/zero count=$(ls -l /var/log/syslog | awk '{print $5}') iflag=count_bytes
+#check
+result=$(cat /var/log/syslog | head -n 5)
+echo "/var/log/syslog:"
+echo "$result"
+if [[ "$result" == *"localhost"* ]]; then echo "No such file or directory"; else echo "Data Destruction success"; fi;
+#cleanup
+cat /tmp/syslog > /var/log/syslog
+rm -f /tmp/syslog

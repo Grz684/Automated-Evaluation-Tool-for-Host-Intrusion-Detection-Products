@@ -1,0 +1,12 @@
+Elevation Required;
+#pre
+echo "echo 'T1546.005 attack test' >> /etc/shadow" > /tmp/T1546.005.sh
+#command
+bash -c 'trap "nohup sh /tmp/T1546.005.sh" SIGINT && kill -SIGINT $$'
+#check
+echo "/etc/shadow:"
+cat /etc/shadow | tail -n 3
+if [ "$(cat /etc/shadow | tail -n 1)" = "T1546.005 attack test" ]; then echo "Trap SIGINT success"; else echo "No such file or directory"; fi;
+#cleanup
+rm -f /tmp/T1546.005.sh
+sed -i "\,T1546.005 attack test,d" /etc/shadow

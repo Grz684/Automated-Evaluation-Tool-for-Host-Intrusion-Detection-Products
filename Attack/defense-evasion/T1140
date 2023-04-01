@@ -1,0 +1,15 @@
+Elevation Required;
+#command
+ENCODED=$(cat /etc/shadow > /tmp/shadow | base64)
+printf $ENCODED | base64 -d
+echo $ENCODED | base64 -d
+echo $(echo $ENCODED) | base64 -d
+echo $ENCODED > /tmp/T1140.encoded && base64 -d /tmp/T1140.encoded
+echo $ENCODED > /tmp/T1140.encoded && base64 -d < /tmp/T1140.encoded
+echo $ENCODED > /tmp/T1140.encoded && cat /tmp/T1140.encoded | base64 -d
+echo $ENCODED > /tmp/T1140.encoded && cat < /tmp/T1140.encoded | base64 -d
+bash -c "{echo,\"$(echo $ENCODED)\"}|{base64,-d}"
+#check
+cat /tmp/shadow | head -n 3
+#cleanup
+rm -f /tmp/shadow

@@ -1,0 +1,5 @@
+;
+#check
+cat /etc/login.defs
+#cleanup
+ls

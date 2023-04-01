@@ -1,0 +1,7 @@
+Elevation Required;Waiting Required;
+#command
+echo "cat /etc/shadow > /tmp/shadow" | at now + 1 minute
+#check
+cat /tmp/shadow | head -n 3
+#cleanup
+rm -f /tmp/shadow

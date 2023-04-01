@@ -1,0 +1,8 @@
+;
+#command
+curl -sLO https://github.com/m0nad/Diamorphine/archive/898810523aa2033f582a4a5903ffe453334044f9.zip && unzip 898810523aa2033f582a4a5903ffe453334044f9.zip && cd Diamorphine-898810523aa2033f582a4a5903ffe453334044f9
+make
+#check
+cd Diamorphine-898810523aa2033f582a4a5903ffe453334044f9 && ls | grep diamorphine.ko
+#cleanup
+rm -rf 898810523aa2033f582a4a5903ffe453334044f9.zip Diamorphine-898810523aa2033f582a4a5903ffe453334044f9

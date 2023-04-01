@@ -1,0 +1,14 @@
+ps -aux | grep Ali | awk '{printf "{\"cpu\":\"%s\",\"mem\":\"%s\",\"vsz\":\"%s\",\"rss\":\"%s\",\"command\":\"%s\",\"time\":\"%s\"}\n",$3,$4,$5,$6,$11,systime()}' | head -n -1
+iotop -b -n1 -P | grep Ali | head -n -1 | awk '{printf "{\"disk_read\":\"%s\",\"disk_write\":\"%s\",\"swap_in\":\"%s\",\"io\":\"%s\",\"command\":\"%s\",\"time\":\"%s\"}\n",$4,$6,$8,$10,$12,systime()}'
+pidstat -urd -l -h | grep Ali | awk '{printf "{\"cpu\":\"%s\",\"minflt\":\"%s\",\"majflt\":\"%s\",\"VSZ\":\"%s\",\"RSS\":\"%s\",\"mem\":\"%s\",\"kB_rd\":\"%s\",\"kB_wr\":\"%s\",\"kB_ccwr\":\"%s\",\"command\":\"%s\",\"time\":\"%s\"}\n",$8,$10,$11,$12,$13,$14,$15,$16,$17,$19,systime()}' | head -n -1
+nohup pidstat -urd -l -h 1 10000 | grep ae[g]is | awk '{printf "{\"cpu\":\"%s\",\"minflt\":\"%s\",\"majflt\":\"%s\",\"VSZ\":\"%s\",\"RSS\":\"%s\",\"mem\":\"%s\",\"kB_rd\":\"%s\",\"kB_wr\":\"%s\",\"kB_ccwr\":\"%s\",\"command\":\"%s\",\"time\":\"%s\"}\n",$8,$10,$11,$12,$13,$14,$15,$16,$17,$19,$1}' 1>test.txt 2>/dev/null &
+killall pidstat
+ps -ef | grep ae[g]is | awk '{printf "%s\n",$8}'
+cat test.txt
+ls
+nohup pidstat -urd -l -h 1 10000 | grep qc[l]oud | awk '{printf "{\"cpu\":\"%s\",\"minflt\":\"%s\",\"majflt\":\"%s\",\"VSZ\":\"%s\",\"RSS\":\"%s\",\"mem\":\"%s\",\"kB_rd\":\"%s\",\"kB_wr\":\"%s\",\"kB_ccwr\":\"%s\",\"command\":\"%s\",\"time\":\"%s\"}\n",$8,$10,$11,$12,$13,$14,$15,$16,$17,$19,$1}' 1>test.txt 2>/dev/null &
+ps -ef | grep qc[l]oud | awk '{printf "%s\n",$8}'
+nohup pidstat -urd -l -h 1 10000 | grep ws[s]sr | awk '{printf "{\"cpu\":\"%s\",\"minflt\":\"%s\",\"majflt\":\"%s\",\"VSZ\":\"%s\",\"RSS\":\"%s\",\"mem\":\"%s\",\"kB_rd\":\"%s\",\"kB_wr\":\"%s\",\"kB_ccwr\":\"%s\",\"command\":\"%s\",\"time\":\"%s\"}\n",$8,$10,$11,$12,$13,$14,$15,$16,$17,$19,$1}' 1>test.txt 2>/dev/null &
+ps -ef | grep ws[s]sr | awk '{printf "%s\n",$8}'
+
+# 记得安装pidstat
