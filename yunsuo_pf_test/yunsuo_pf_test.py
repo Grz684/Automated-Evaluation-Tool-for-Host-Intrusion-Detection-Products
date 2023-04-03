@@ -3,15 +3,24 @@ from ssh import SSH
 import json
 import os
 
+from yunsuo_pf_test.yunsuo_api import YunSuoAPI
+
 
 class YunSuoPFTest:
-    def __init__(self, ssh_hostname, ssh_username, ssh_password):
+    def __init__(self, ssh_hostname, ssh_username, ssh_password, uuid, manage_center_ip, token):
         self.yunsuo_target_processes = ["wsssr_defence_service", "wsssr_defence_daemon", "lbaselinescan", "icsfilesec"]
         self.yunsuo_test_functions = ["nothing_open", "vul_scan", "assets_scan", "malware_scan", "baseline_scan",
                                       "os_solid", "intrusion_detection"]
         self.ssh_hostname = ssh_hostname
         self.ssh_username = ssh_username
         self.ssh_password = ssh_password
+        self.uuid = uuid
+        self.manage_center_ip = manage_center_ip
+        self.token = token
+
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.commands_file_path = os.path.join(self.base_dir, '..', "pf_test_commands.txt")
+        self.yunsuo_dir = os.path.join(self.base_dir, "yunsuo")
 
     def yunsuo_agent_func_pf_test(self, function_id, test_time=30):
         test_function = self.yunsuo_test_functions[function_id]
@@ -28,7 +37,7 @@ class YunSuoPFTest:
 
         # 后台挂起检测任务
         ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_without_stdout_infile("command.txt", 11)
+        ssh_task.exec_command_without_stdout_infile(self.commands_file_path, 11)
         ssh_task.close()
 
         if function_id in [0, 5, 6]:
@@ -44,15 +53,15 @@ class YunSuoPFTest:
 
         # 结束检测任务
         ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_infile("command.txt", 5)
+        ssh_task.exec_command_infile(self.commands_file_path, 5)
         ssh_task.close()
         # 获取检测结果
         time.sleep(5)
-        ini_test_result = ssh.exec_command_infile("command.txt", 7)
+        ini_test_result = ssh.exec_command_infile(self.commands_file_path, 7)
         ini_test_result = ini_test_result.decode().strip()
 
-        os.makedirs("yunsuo", exist_ok=True)
-        file_name = "yunsuo/init_" + test_function + ".txt"
+        os.makedirs(self.yunsuo_dir, exist_ok=True)
+        file_name = os.path.join(self.yunsuo_dir, f"init_{test_function}.txt")
         f = open(file_name, mode='w', encoding='utf-8')
         f.write(ini_test_result)
         ssh.close()
@@ -60,7 +69,7 @@ class YunSuoPFTest:
 
     def check_current_status(self, test_function, ssh):
         # 得到正在运行的process
-        process_paths = ssh.exec_command_infile("command.txt", 12)
+        process_paths = ssh.exec_command_infile(self.commands_file_path, 12)
         process_paths = process_paths.decode().strip()
         process_paths = process_paths.split("\n")
         running_processes = []
@@ -97,12 +106,12 @@ class YunSuoPFTest:
 
     def handle_test_data(self, function_id):
         test_function = self.yunsuo_test_functions[function_id]
-        init_file_name = "yunsuo/init_" + test_function + ".txt"
-        dirname = "yunsuo/" + test_function
+        init_file_name = os.path.join(self.yunsuo_dir, f"init_{test_function}.txt")
+        dirname = os.path.join(self.yunsuo_dir, test_function)
         os.makedirs(dirname, exist_ok=True)
         result_files = dict()
         for index in range(len(self.yunsuo_target_processes)):
-            file_name = dirname + "/" + self.yunsuo_target_processes[index]
+            file_name = os.path.join(dirname, self.yunsuo_target_processes[index])
             f = open(file_name, mode='w', encoding='utf-8')
             # f.write("//handle time: " + time.ctime() + "\n")
             result_files[self.yunsuo_target_processes[index]] = f
@@ -131,7 +140,7 @@ class YunSuoPFTest:
 
             line = init_f.readline()
 
-        time_f = open(dirname + '/time', mode='w', encoding='utf-8')
+        time_f = open(os.path.join(dirname, 'time'), mode='w', encoding='utf-8')
         test_time = str(stop_time_stamp - start_time_stamp)
         time_f.write(test_time)
         # 关闭文件句柄
@@ -142,9 +151,9 @@ class YunSuoPFTest:
 
     def display_test_data(self, function_id):
         test_function = self.yunsuo_test_functions[function_id]
-        dirname = "yunsuo/" + test_function
+        dirname = os.path.join(self.yunsuo_dir, test_function)
 
-        time_f = open(dirname + '/time', mode='r', encoding='utf-8')
+        time_f = open(os.path.join(dirname, 'time'), mode='r', encoding='utf-8')
         test_time = int(time_f.readline())
         time_f.close()
 
@@ -161,7 +170,7 @@ class YunSuoPFTest:
             total_disk_read = 0.0
             total_disk_write = 0.0
 
-            file_name = dirname + "/" + self.yunsuo_target_processes[index]
+            file_name = os.path.join(dirname, self.yunsuo_target_processes[index])
             f = open(file_name, mode='r', encoding='utf-8')
             line = f.readline()
             while line:
@@ -210,9 +219,17 @@ class YunSuoPFTest:
         self.display_test_data(1)
 
     def yunsuo_pf_test_assets(self):
-        self.yunsuo_agent_func_pf_test(2)
-        self.handle_test_data(2)
-        self.display_test_data(2)
+        try:
+            yunsuo_api = YunSuoAPI(self.ssh_hostname, self.manage_center_ip, self.token, self.uuid)
+            task_uuid = yunsuo_api.create_scan_asset_task()
+            print("任务创建成功，任务UUID：")
+            print(task_uuid)
+            self.yunsuo_agent_func_pf_test(2)
+            self.handle_test_data(2)
+            self.display_test_data(2)
+        except Exception as e:
+            print("错误信息：")
+            print(e)
 
     def yunsuo_pf_test_virus(self):
         self.yunsuo_agent_func_pf_test(3)

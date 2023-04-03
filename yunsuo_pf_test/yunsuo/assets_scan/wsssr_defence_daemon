@@ -1,2 +1,6 @@
-{"cpu":"0.00","minflt":"2.00","majflt":"0.00","VSZ":"785932","RSS":"7744","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"12:14:53"}
-{"cpu":"2.00","minflt":"2.00","majflt":"0.00","VSZ":"785932","RSS":"7744","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"12:15:03"}
+{"cpu":"1.00","minflt":"2.00","majflt":"0.00","VSZ":"785932","RSS":"7824","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"09:02:05"}
+{"cpu":"0.00","minflt":"2.00","majflt":"0.00","VSZ":"785932","RSS":"7824","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"09:02:15"}
+{"cpu":"1.00","minflt":"0.00","majflt":"0.00","VSZ":"785932","RSS":"7824","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"09:02:18"}
+{"cpu":"1.00","minflt":"2.00","majflt":"0.00","VSZ":"785932","RSS":"7824","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"09:02:25"}
+{"cpu":"0.00","minflt":"2.00","majflt":"0.00","VSZ":"785932","RSS":"7824","mem":"0.39","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"09:02:35"}
+{"cpu":"4.00","minflt":"0.00","majflt":"0.00","VSZ":"785932","RSS":"7824","mem":"0.39","kB_rd":"0.00","kB_wr":"4.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"09:02:37"}

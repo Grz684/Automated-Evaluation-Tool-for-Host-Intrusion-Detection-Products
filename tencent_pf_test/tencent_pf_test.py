@@ -24,6 +24,7 @@ class TencentPFTest:
         self.tencent_target_processes = ["YDService", "YDLive", "YDPython", "YDFlame", "YDUtils"]
         self.tencent_test_functions = ["nothing_open", "vul_scan", "assets_scan", "malware_scan", "baseline_scan"]
         self.accessKeyId = accessKeyId
+
         self.accessKeySecret = accessKeySecret
         self.uuid = uuid
         self.base_dir = os.path.dirname(os.path.abspath(__file__))

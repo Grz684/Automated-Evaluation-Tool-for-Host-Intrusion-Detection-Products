@@ -1,3 +1,0 @@
-{"cpu":"49.00","minflt":"380.00","majflt":"0.00","VSZ":"272904","RSS":"25424","mem":"1.27","kB_rd":"2871.00","kB_wr":"20.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/lbaselinescan","time":"12:23:47"}
-{"cpu":"30.00","minflt":"328.00","majflt":"0.00","VSZ":"273224","RSS":"26108","mem":"1.30","kB_rd":"1036.00","kB_wr":"20.00","kB_ccwr":"8.00","command":"/usr/local/wsssr_defence_agent/lbaselinescan","time":"12:23:48"}
-{"cpu":"17.00","minflt":"466.00","majflt":"0.00","VSZ":"271144","RSS":"26460","mem":"1.32","kB_rd":"200.00","kB_wr":"120.00","kB_ccwr":"40.00","command":"/usr/local/wsssr_defence_agent/lbaselinescan","time":"12:23:49"}
