@@ -242,7 +242,7 @@ class YunSuoAPI:
             response_data = response.json()
 
             if response_data["code"] == "1":  # 请求成功
-                return response_data["data"]
+                return response_data["data"]['status']
             else:
                 raise Exception(
                     f"请求失败，错误码：{response_data['code']}, 错误信息：{response_data['msg']}")
