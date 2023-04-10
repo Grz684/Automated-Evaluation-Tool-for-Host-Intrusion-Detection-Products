@@ -1,4 +1,6 @@
 import json
+import sqlite3
+
 from tencentcloud.common import credential
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
@@ -236,7 +238,102 @@ class TencentApi:
         except TencentCloudSDKException as err:
             print(err)
 
+    def describe_baseline_item_info(self):
+        def create_table_and_connect_db(database_name):
+            conn = sqlite3.connect(database_name)
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS items (
+                        item_id INTEGER PRIMARY KEY,
+                        item_name TEXT,
+                        item_desc TEXT
+                    )
+                """)
+
+            conn.commit()
+            return conn
+
+        # 将数据插入到数据库
+        def insert_data_to_db(conn, item_id, item_name, item_desc=None):
+            cursor = conn.cursor()
+            cursor.execute("""
+                    INSERT OR REPLACE INTO items (item_id, item_name, item_desc) VALUES (?, ?, ?)
+                """, (item_id, item_name, item_desc))
+            conn.commit()
+
+        try:
+            # 实例化一个认证对象，入参需要传入腾讯云账户 SecretId 和 SecretKey，此处还需注意密钥对的保密
+            # 代码泄露可能会导致 SecretId 和 SecretKey 泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议采用更安全的方式来使用密钥，请参见：https://cloud.tencent.com/document/product/1278/85305
+            # 密钥可前往官网控制台 https://console.cloud.tencent.com/cam/capi 进行获取
+            cred = credential.Credential(self.secretid, self.secretkey)
+            # 实例化一个http选项，可选的，没有特殊需求可以跳过
+            httpProfile = HttpProfile()
+            httpProfile.endpoint = "cwp.tencentcloudapi.com"
+
+            # 实例化一个client选项，可选的，没有特殊需求可以跳过
+            clientProfile = ClientProfile()
+            clientProfile.httpProfile = httpProfile
+            # 实例化要请求产品的client对象,clientProfile是可选的
+            client = cwp_client.CwpClient(cred, "", clientProfile)
+
+            # 第一次请求，无偏移
+            req1 = models.DescribeBaselineItemInfoRequest()
+            params1 = {
+                "Filters": [
+                    {
+                        "Name": "RuleId",
+                        "Values": ["133"]
+                    }
+                ],
+                "Limit": 100,
+            }
+            req1.from_json_string(json.dumps(params1))
+            resp1 = client.DescribeBaselineItemInfo(req1)
+
+            jsonString1 = resp1.to_json_string()
+            jsonData1 = json.loads(jsonString1)
+
+            # 第二次请求，偏移100
+            req2 = models.DescribeBaselineItemInfoRequest()
+            params2 = {
+                "Filters": [
+                    {
+                        "Name": "RuleId",
+                        "Values": ["133"]
+                    }
+                ],
+                "Limit": 100,
+                "Offset": 100
+            }
+            req2.from_json_string(json.dumps(params2))
+            resp2 = client.DescribeBaselineItemInfo(req2)
+
+            jsonString2 = resp2.to_json_string()
+            jsonData2 = json.loads(jsonString2)
+
+            # 合并两次请求结果
+            merged_list = jsonData1['List'] + jsonData2['List']
+            print(merged_list)
+            print(len(merged_list))
+
+            # 连接数据库
+            conn = create_table_and_connect_db("tencent_cis_baseline_scan_items.db")
+
+            for item in merged_list:
+                item_id = item['ItemId']
+                item_name = item['ItemName']
+                item_desc = item['ItemDesc']
+
+                insert_data_to_db(conn, item_id, item_name, item_desc)
+
+            conn.close()
+
+        except TencentCloudSDKException as err:
+            print(err)
+
 
 if __name__ == '__main__':
     tencentapi = TencentApi("AKIDqbGl9NyRkrwxpfNwEPO8jAQTL5iQG1b2", "MckjeP0QfhYCg2tX5RiKrCMN4iCZlolY",
                             "ebb72142-e05d-e812-505e-05bf0d7b4907")
+    tencentapi.describe_baseline_item_info()

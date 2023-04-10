@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # This file is auto-generated, don't edit it. Thanks.
 import json
+import sqlite3
 import sys
 
 from typing import List
@@ -75,6 +76,7 @@ class AliApi:
     alinet：表示恶意网络行为防御。
     alisecguard：表示客户端自保护。
     """
+
     def operate_suspicious_target_config(
             self,
             type,
@@ -91,7 +93,8 @@ class AliApi:
         runtime = util_models.RuntimeOptions()
         try:
             # 复制代码运行请自行打印 API 的返回值
-            response = client.operate_suspicious_target_config_with_options(operate_suspicious_target_config_request, runtime)
+            response = client.operate_suspicious_target_config_with_options(operate_suspicious_target_config_request,
+                                                                            runtime)
             jsonData = json.dumps(response.body.to_map(), ensure_ascii=False, indent=4)
 
             print(jsonData)
@@ -105,6 +108,7 @@ class AliApi:
     cms：Web-CMS漏洞
     emg：应急漏洞
     """
+
     def modify_vul_target_config_request(
             self,
             type,
@@ -163,6 +167,7 @@ class AliApi:
     CMS：CMS漏洞
     SCA：应用漏洞
     """
+
     def vul_scan(
             self,
     ) -> None:
@@ -185,7 +190,7 @@ class AliApi:
 
     # 病毒扫描
     def start_virus_scan_task(
-        self
+            self
     ) -> None:
         client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
         # query_group_request = sas_models.DescribeAllGroupsRequest()
@@ -212,7 +217,7 @@ class AliApi:
 
     # 资产采集
     def assets_scan(
-        self
+            self
     ) -> None:
         # 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378659.html
         client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
@@ -234,7 +239,7 @@ class AliApi:
 
     # 基线扫描（CIS Ubuntu）
     def baseline_scan(
-        self
+            self
     ) -> None:
         # 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378659.html
         client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
@@ -277,8 +282,8 @@ class AliApi:
             UtilClient.assert_as_string(error.message)
 
     def handle_security_events(
-        self,
-        ids
+            self,
+            ids
     ) -> None:
         # 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378659.html
         client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
@@ -291,15 +296,94 @@ class AliApi:
             # 复制代码运行请自行打印 API 的返回值
             response = client.handle_security_events_with_options(handle_security_events_request, runtime)
             jsonData = json.dumps(response.body.to_map(), ensure_ascii=False, indent=4)
-            print(response)
+            # print(response)
             print(jsonData)
+        except Exception as error:
+            # 如有需要，请打印 error
+            UtilClient.assert_as_string(error.message)
+
+    def get_baseline_scan_items(
+            self,
+    ) -> None:
+        def create_table_and_connect_db(database_name):
+            conn = sqlite3.connect(database_name)
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS items (
+                        check_id INTEGER PRIMARY KEY,
+                        check_item TEXT,
+                        check_type TEXT,
+                        description TEXT
+                    )
+                """)
+
+            conn.commit()
+            return conn
+
+        # 将数据插入到数据库
+        def insert_data_to_db(conn, check_id, check_item=None, check_type=None, description=None):
+            cursor = conn.cursor()
+            cursor.execute("""
+                    INSERT OR REPLACE INTO items (check_id, check_item, check_type, description) VALUES (?, ?, ?, ?)
+                """, (check_id, check_item, check_type, description))
+            conn.commit()
+
+        conn = create_table_and_connect_db("ali_cis_baseline_scan_items.db")
+        # 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378659.html
+        client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
+        list_check_item_warning_summary_request = sas_20181203_models.ListCheckItemWarningSummaryRequest(
+            risk_type='cis',
+            page_size=200
+        )
+        runtime = util_models.RuntimeOptions()
+        try:
+            # 复制代码运行请自行打印 API 的返回值
+            response = client.list_check_item_warning_summary_with_options(list_check_item_warning_summary_request, runtime)
+            jsonObj = json.dumps(response.body.to_map())
+            jsonData = json.loads(jsonObj)
+
+            for item in jsonData['List']:
+                check_id = item['CheckId']
+                check_item = item['CheckItem']
+                check_type = item['CheckType']
+                description = item['Description']
+
+                # print(f'CheckItem: {check_item}')
+                # print(f'CheckType: {check_type}')
+                # print(f'Description: {description}')
+                # print('---')
+
+                # 删除特殊字符
+                check_item = check_item.replace('\r', '').replace('\n', '')
+                insert_data_to_db(conn, check_id, check_item, check_type, description)
+        except Exception as error:
+            # 如有需要，请打印 error
+            UtilClient.assert_as_string(error.message)
+
+    def describe_baseline_check_warnings(
+        self
+    ) -> None:
+        # 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378659.html
+        client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
+        describe_check_warnings_request = sas_20181203_models.DescribeCheckWarningsRequest(
+            uuid='inet-ebb4b2df-384f-451d-a0be-9be0512bb8ae',
+            risk_id=62,
+            page_size=200
+        )
+        runtime = util_models.RuntimeOptions()
+        try:
+            # 复制代码运行请自行打印 API 的返回值
+            client.describe_check_warnings_with_options(describe_check_warnings_request, runtime)
         except Exception as error:
             # 如有需要，请打印 error
             UtilClient.assert_as_string(error.message)
 
 
 if __name__ == '__main__':
-    aliapi = AliApi("LTAI5tKzriqKJux8AWn72mDh", "DQDSg6t6IMih9MnGlykw0SYvGv20h9", "inet-06d2fdde-69b4-4953-904d-65fa31a7c0ad")
+    aliapi = AliApi("LTAI5tKzriqKJux8AWn72mDh", "DQDSg6t6IMih9MnGlykw0SYvGv20h9",
+                    "inet-06d2fdde-69b4-4953-904d-65fa31a7c0ad")
+    aliapi.get_baseline_scan_items()
 
     # aliapi.operate_suspicious_target_config('auto_breaking', 'del')
     # aliapi.operate_suspicious_target_config('webshell_cloud_breaking', 'del')

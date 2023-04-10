@@ -73,8 +73,10 @@ class YunSuoAPI:
 
             cursor.execute("""
                     CREATE TABLE IF NOT EXISTS items (
-                        id INTEGER PRIMARY KEY,
-                        cn_desc TEXT
+                        item_id INTEGER PRIMARY KEY,
+                        cn_desc TEXT,
+                        group_name TEXT,
+                        item_intro TEXT
                     )
                 """)
 
@@ -82,20 +84,20 @@ class YunSuoAPI:
             return conn
 
         # 将数据插入到数据库
-        def insert_data_to_db(conn, item_id, cn_desc):
+        def insert_data_to_db(conn, item_id, cn_desc, group_name=None, item_intro=None):
             cursor = conn.cursor()
             cursor.execute("""
-                    INSERT OR IGNORE INTO items (id, cn_desc) VALUES (?, ?)
-                """, (item_id, cn_desc))
+                    INSERT OR REPLACE INTO items (item_id, cn_desc, group_name, item_intro) VALUES (?, ?, ?, ?)
+                """, (item_id, cn_desc, group_name, item_intro))
             conn.commit()
 
         def get_item_id_by_cn_desc(conn, cn_desc):
             cursor = conn.cursor()
-            cursor.execute("SELECT id FROM items WHERE cn_desc = ?", (cn_desc,))
+            cursor.execute("SELECT item_id FROM items WHERE cn_desc = ?", (cn_desc,))
             result = cursor.fetchone()
             return result[0] if result else None
 
-        conn = create_table_and_connect_db("all_yunsuo_baseline_scan_items.db")
+        conn = create_table_and_connect_db("yunsuo_cis_baseline_scan_items.db")
         # 设置API的URL和请求头
         url = f"https://{self.manage_center_ip}/kernelApi/kernelScanSrv/seBaseItemController/listBaselineItems"
         headers = {"Content-Type": "application/json"}
@@ -115,10 +117,23 @@ class YunSuoAPI:
 
             if response_data["code"] == "1":  # 请求成功
                 for item in response_data["data"]:
-                    item_id = item["itemId"]
-                    cn_desc = item["cnDesc"]
-                    # print(f"扫描项ID: {item_id}, 中文描述: {cn_desc}")
-                    insert_data_to_db(conn, item_id, cn_desc)
+                    itemId = item["itemId"]
+                    cnDesc = item["cnDesc"]
+                    osType = item["osType"]
+                    ifModifyValue = item["ifModifyValue"]
+                    ifRepair = item["ifRepair"]
+                    level = item["level"]
+                    groupName = item["groupName"]
+                    itemDetail = item["itemDetail"]
+                    itemIntro = item["itemIntro"]
+                    repairSuggestionCn = item["repairSuggestionCn"]
+
+                    # print(
+                    #     f"扫描项ID: {itemId} | 扫描项中文描述: {cnDesc} | 扫描项支持的操作系统类型: {osType} | 是否支持修改检查标准值: "
+                    #     f"{ifModifyValue} | 是否支持修复: {ifRepair} | 危险等级: {level} | 检查项所属分组: {groupName} | "
+                    #     f"检查项检查内容: {itemDetail} | 检查说明: {itemIntro} | 修复建议: {repairSuggestionCn}")
+
+                    insert_data_to_db(conn, itemId, cnDesc, groupName, itemIntro)
             else:
                 raise Exception(f"请求失败，错误码：{response_data['code']}, 错误信息：{response_data['msg']}")
 
@@ -132,8 +147,22 @@ class YunSuoAPI:
         for cn_desc in baseline_scan_itemNames:
             item_id = get_item_id_by_cn_desc(conn, cn_desc)
             # print(f"ID: {item_id} for cn_desc: {cn_desc}")
-            item_ids.append(item_id)
+            if item_id is not None:
+                item_ids.append(item_id)
+            else:
+                print(cn_desc)
 
+        cursor = conn.cursor()
+        item_ids_str = ','.join(str(i) for i in item_ids)
+        # 构建 SQL 查询以删除不在 item_ids_str 中的项
+        delete_sql = f"DELETE FROM items WHERE item_id NOT IN ({item_ids_str})"
+
+        # 执行删除操作
+        cursor.execute(delete_sql)
+
+        # 提交更改并关闭连接
+        conn.commit()
+        cursor.close()
         conn.close()
         return item_ids
 
@@ -156,6 +185,11 @@ class YunSuoAPI:
             column_data.append(cell.value)
 
         return column_data
+    @staticmethod
+    def chunks(lst, n):
+        """将 lst 分成大小为 n 的块"""
+        for i in range(0, len(lst), n):
+            yield lst[i:i + n]
 
     def get_machines_by_ip(self, extranet_ip=None, current_page=1, max_results=10):
         # 设置API的URL和请求头
@@ -383,14 +417,15 @@ if __name__ == "__main__":
 
     # yunsuo_pf_test_baseline()
 
-    # try:
-    #     yunosuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
-    #     yunosuo_api.get_machines_by_ip()
-    #
-    # except Exception as e:
-    #     print(e)
+    try:
+        yunosuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
+        itemIds = yunosuo_api.get_baseline_scan_items()
+        # print(itemIds)
 
-    task_uuid = "10f18d3e5e014bb1a58690654017b69b"
+    except Exception as e:
+        print(e)
+
+    # task_uuid = "7963bf1237934ac8847c39c9f3341f49"
     # try:
     #     yunosuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
     #     scan_results = yunosuo_api.get_scan_results(task_uuid)
@@ -408,14 +443,14 @@ if __name__ == "__main__":
     # except Exception as e:
     #     print(e)
 
-    try:
-        yunsuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
-        task_status = yunsuo_api.get_task_status(task_uuid)
-        print("任务状态：")
-        print(task_status)
-
-    except Exception as e:
-        print(e)
+    # try:
+    #     yunsuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
+    #     task_status = yunsuo_api.get_task_status(task_uuid)
+    #     print("任务状态：")
+    #     print(task_status)
+    #
+    # except Exception as e:
+    #     print(e)
 
     # try:
     #     yunsuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)

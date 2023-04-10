@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="virus_info" uuid="2e62e5b2-9327-4bc7-a48f-75d2c85fffbe">
+    <data-source source="LOCAL" name="tencent_cis_baseline_scan_items" uuid="61dd355b-4ea0-45ad-a599-d98955b25c06">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:E:\Project\Python_project\graduation_project\virus_info.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:E:\Project\Python_project\graduation_project\tencent_pf_test\tencent_cis_baseline_scan_items.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.40.1/org/xerial/sqlite-jdbc/3.40.1.0/sqlite-jdbc-3.40.1.0.jar</url>
+        </library>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.39.2/sqlite-jdbc-3.39.2.jar</url>
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="all_yunsuo_baseline_scan_items" uuid="bf8e3c2e-f8b2-4748-8b1e-d196c9630ca3">
+    <data-source source="LOCAL" name="ali_cis_baseline_scan_items" uuid="1ab66d96-e45d-4c66-8567-4e5d9284fb6b">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:E:\Project\Python_project\graduation_project\yunsuo_pf_test\all_yunsuo_baseline_scan_items.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:E:\Project\Python_project\graduation_project\ali_pf_test\ali_cis_baseline_scan_items.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.40.1/org/xerial/sqlite-jdbc/3.40.1.0/sqlite-jdbc-3.40.1.0.jar</url>
+        </library>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.39.2/sqlite-jdbc-3.39.2.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="yunsuo_cis_baseline_scan_items" uuid="4ece294a-dacf-4977-af09-1fc23093ec16">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Project\Python_project\graduation_project\yunsuo_pf_test\yunsuo_cis_baseline_scan_items.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.40.1/org/xerial/sqlite-jdbc/3.40.1.0/sqlite-jdbc-3.40.1.0.jar</url>
+        </library>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.39.2/sqlite-jdbc-3.39.2.jar</url>
         </library>

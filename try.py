@@ -1,29 +1,73 @@
-import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+import sqlite3
+import time
 
-# 时间字符串和格式
-time_strings = ['09:29:34', '09:29:35', '09:29:36', '09:29:37']
-time_format = '%H:%M:%S'
+import requests
+import json
 
-# 转换时间并归零
-time_objects = [datetime.strptime(t, time_format) for t in time_strings]
-time_zeroed = [(t - time_objects[0]).total_seconds() for t in time_objects]
 
-# CPU 使用率数据
-cpu1_usage = [10, 15, 20, 25]
-cpu2_usage = [12, 17, 22, 27]
-cpu3_usage = [14, 19, 24, 29]
-cpu4_usage = [16, 21, 26, 31]
+def simnet_check(text1, text2):
+    url = "https://aip.baidubce.com/rpc/2.0/nlp/v2/simnet?charset=&access_token=" + get_access_token()
 
-# 绘制折线图
-plt.plot(time_zeroed, cpu1_usage, label='CPU1')
-plt.plot(time_zeroed, cpu2_usage, label='CPU2')
-plt.plot(time_zeroed, cpu3_usage, label='CPU3')
-plt.plot(time_zeroed, cpu4_usage, label='CPU4')
+    payload = json.dumps({
+        "text_1": text1,
+        "text_2": text2
+    })
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
 
-plt.xlabel('Time (seconds)')
-plt.ylabel('CPU Usage')
-plt.title('CPU Usage vs Time')
-plt.legend()
+    response = requests.request("POST", url, headers=headers, data=payload)
+    jsonData = json.loads(response.text)
 
-plt.show()
+    return jsonData['score']
+
+
+def get_access_token():
+    """
+    使用 AK，SK 生成鉴权签名（Access Token）
+    :return: access_token，或是None(如果错误)
+    """
+    url = "https://aip.baidubce.com/oauth/2.0/token"
+    params = {"grant_type": "client_credentials", "client_id": "uL0P7on65vGyw8Za8DLQesly",
+              "client_secret": "s0QPmxh0GYK5hc7APIzZmj5NMMo9jKdF"}
+    return str(requests.post(url, params=params).json().get("access_token"))
+
+
+if __name__ == '__main__':
+    # 连接第一个数据库并读取cn_desc列
+    db1 = sqlite3.connect('yunsuo_pf_test/all_yunsuo_baseline_scan_items.db')
+    cursor1 = db1.cursor()
+    cursor1.execute('SELECT cn_desc FROM items')
+    cn_desc_data = cursor1.fetchall()
+
+    # 连接第二个数据库并读取check_item列
+    db2 = sqlite3.connect('ali_pf_test/all_ali_baseline_scan_items.db')
+    cursor2 = db2.cursor()
+    cursor2.execute('SELECT check_item FROM items')
+    check_item_data = cursor2.fetchall()
+
+    # 处理结果
+    cn_desc_list = [row[0] for row in cn_desc_data]
+    check_item_list = [row[0] for row in check_item_data]
+
+    # 关闭数据库连接
+    cursor1.close()
+    db1.close()
+    cursor2.close()
+    db2.close()
+
+    # print("yunsuo 列：", cn_desc_list)
+    # print("ali 列：", check_item_list)
+    scores = []
+
+    for text in cn_desc_list:
+        text1 = text
+        text2 = check_item_list[0]
+        print(text1)
+        print(text2)
+        score = simnet_check(text1, text2)
+        time.sleep(1)
+        scores.append(score)
+
+    print(scores)
