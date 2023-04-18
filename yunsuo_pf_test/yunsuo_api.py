@@ -415,17 +415,17 @@ if __name__ == "__main__":
 
     # yunsuo_pf_test_assets()
 
-    # yunsuo_pf_test_baseline()
+    yunsuo_pf_test_baseline()
 
-    try:
-        yunosuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
-        itemIds = yunosuo_api.get_baseline_scan_items()
-        # print(itemIds)
+    # try:
+    #     yunosuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
+    #     itemIds = yunosuo_api.get_baseline_scan_items()
+    #     # print(itemIds)
+    #
+    # except Exception as e:
+    #     print(e)
 
-    except Exception as e:
-        print(e)
-
-    # task_uuid = "7963bf1237934ac8847c39c9f3341f49"
+    # task_uuid = "561b51e5e12a43f2895914f1f7cfb37e"
     # try:
     #     yunosuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
     #     scan_results = yunosuo_api.get_scan_results(task_uuid)
@@ -442,7 +442,7 @@ if __name__ == "__main__":
     #
     # except Exception as e:
     #     print(e)
-
+    #
     # try:
     #     yunsuo_api = YunSuoAPI(ssh_hostname, manage_center_ip, token, uuid)
     #     task_status = yunsuo_api.get_task_status(task_uuid)

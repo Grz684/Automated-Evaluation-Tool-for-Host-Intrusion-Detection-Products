@@ -1,11 +1,11 @@
 attackinfo:
   ssh_hostname: 10.10.21.203
   ssh_username: ubuntu
-  ssh_password: 010404
+  ssh_password: "010404"
   root_username: root
-  root_password: 010404
+  root_password: "010404"
   attack_pattern: 2
-  attack_target: T1070.003
+  attack_target: T1574.006
 
 pfinfo:
   target_agent: 2

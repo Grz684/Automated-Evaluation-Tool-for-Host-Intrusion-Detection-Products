@@ -1,30 +1,34 @@
 import glob
 import os
 import re
+import subprocess
 import time
+
+import yaml
 
 from ssh import SSH
 import configparser
 
-cf = configparser.ConfigParser()
-cf.read("config.conf", encoding='utf-8')
-ssh_hostname = cf['attackinfo']['ssh_hostname']
-ssh_username = cf['attackinfo']['ssh_username']
-ssh_password = cf['attackinfo']['ssh_password']
-root_username = cf['attackinfo']['root_username']
-root_password = cf['attackinfo']['root_password']
-attack_pattern = cf['attackinfo']['attack_pattern']
-attack_target = cf['attackinfo']['attack_target']
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
+agent = config["attackinfo"]
+ssh_hostname = str(agent["ssh_hostname"])
+ssh_username = str(agent["ssh_username"])
+ssh_password = str(agent["ssh_password"])
+root_username = str(agent['root_username'])
+root_password = str(agent['root_password'])
+attack_pattern = str(agent['attack_pattern'])
+attack_target = str(agent['attack_target'])
 
 
 def read_first_line(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='UTF-8') as file:
         first_line = file.readline().strip()
     return first_line
 
 
 def read_commands_from_file(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='UTF-8') as file:
         file.readline()
         lines = file.readlines()
 
@@ -47,6 +51,24 @@ def read_commands_from_file(file_path):
     return commands_dict
 
 
+def prepare(command_file, client):
+    if command_file == os.path.join("Attack", "defense-evasion-try", "T1480.001"):
+        script_path = os.path.join("attack_file", "T1480.001.py")
+        input_file_path = os.path.join("attack_file", "test_T1480")
+        output_file_path = os.path.join("attack_file", "test_T1480_enc")
+        command = ["python", script_path, "encrypt", input_file_path, output_file_path, ssh_hostname]
+        subprocess.run(command, text=True)
+
+        local_file = output_file_path
+        remote_file = "/tmp/test_T1480_enc"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+
+
 def exec_attack(command_file):
     first_line = read_first_line(command_file)
     need_wait = 0
@@ -61,6 +83,7 @@ def exec_attack(command_file):
     if "Waiting Required" in first_line:
         need_wait = 1
 
+    prepare(command_file, client)
     commands_dict = read_commands_from_file(command_file)
 
     for key, commands in commands_dict.items():
