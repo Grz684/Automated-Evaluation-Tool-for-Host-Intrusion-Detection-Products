@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Attack_test/attack_file/ezuri" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Attack_test/attack_file/linux-process-injection" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/attack_file/ezuri" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/attack_file/linux-process-injection" vcs="Git" />
   </component>
 </project>

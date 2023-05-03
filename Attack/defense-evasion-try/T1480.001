@@ -1,9 +1,0 @@
-;
-#command
-python3 /home/ubuntu/attack/T1480.001.py decrypt /tmp/test_T1480_enc /tmp/test_T1480
-#check
-file /tmp/test_T1480_enc
-file /tmp/test_T1480
-cat /tmp/test_T1480
-#cleanup
-rm /tmp/test_T1480_enc /tmp/test_T1480

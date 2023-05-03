@@ -1,5 +1,0 @@
-;
-#check
-ps aux | egrep 'falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd|YD|Ali|wsssr'
-#cleanup
-ls

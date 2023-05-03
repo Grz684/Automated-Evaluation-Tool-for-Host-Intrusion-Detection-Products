@@ -1,0 +1,9 @@
+;
+#command
+echo "passwd in Bash History:" > /tmp/loot.txt
+cat ~/.bash_history | grep -e '-p ' -e 'pass' -e 'ssh' >> /tmp/loot.txt
+#check
+echo "在bash历史记录中搜索我们想要捕获的特定命令，如含有-p、pass、ssh字段的命令以查找潜在的凭证信息："
+cat /tmp/loot.txt
+#cleanup
+rm -f /tmp/loot.txt

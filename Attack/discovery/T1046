@@ -1,5 +1,0 @@
-Elevation Required;
-#check
-sudo nmap -sS 10.10.21.0/24 -p 80
-#cleanup
-ls

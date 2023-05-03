@@ -1,0 +1,4 @@
+;
+#check
+echo "使用ps aux | egrep显示当前正在运行的安全软件："
+ps aux | grep -v grep | egrep 'falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd|YD|Ali|wsssr'

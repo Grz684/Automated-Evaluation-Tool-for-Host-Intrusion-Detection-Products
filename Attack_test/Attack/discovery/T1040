@@ -1,0 +1,11 @@
+Elevation Required;Waiting Required;
+#pre
+if [ -f "/tmp/t1040_linux_pcapdemo" ]; then echo yes; else cc /tmp/linux_pcapdemo.c -o /tmp/t1040_linux_pcapdemo; fi
+#command
+nohup /tmp/t1040_linux_pcapdemo -a -f -t 10 > /tmp/linux_pcapdemo_log &
+#check
+echo "编译执行测试用文件linux_pcapdemo.c，捕获域=AF_PACKET，类型=SOCK_RAW的数据包几秒钟，并在套接字上设置一个BPF筛选器以筛选UDP流量："
+cat /tmp/linux_pcapdemo_log
+#cleanup
+rm /tmp/linux_pcapdemo_log
+rm /tmp/t1040_linux_pcapdemo /tmp/linux_pcapdemo.c

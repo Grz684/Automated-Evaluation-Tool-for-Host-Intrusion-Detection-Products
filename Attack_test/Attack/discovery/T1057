@@ -1,0 +1,9 @@
+;
+#command
+ps >> /tmp/loot.txt
+ps aux >> /tmp/loot.txt
+#check
+echo "利用ps获取进程详细信息："
+cat /tmp/loot.txt
+#cleanup
+rm /tmp/loot.txt

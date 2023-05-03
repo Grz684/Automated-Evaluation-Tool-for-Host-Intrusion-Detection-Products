@@ -1,0 +1,4 @@
+;
+#check
+echo "执行netstat和who-a获取网络连接列表："
+netstat; who -a

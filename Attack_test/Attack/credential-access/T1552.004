@@ -1,0 +1,10 @@
+;
+#pre
+mkdir /tmp/art-staging
+find / -name id_rsa 2>/dev/null -exec cp {} /tmp/art-staging \;
+#check
+echo "使用cp命令将找到的SSH私钥复制到暂存文件夹中，查看该私钥文件："
+file /tmp/art-staging/id_rsa
+#cleanup
+rm -rf /tmp/art-staging
+rm -f /tmp/id_rsa

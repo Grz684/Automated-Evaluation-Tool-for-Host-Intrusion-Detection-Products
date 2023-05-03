@@ -1,9 +1,0 @@
-Elevation Required;Waiting Required;
-#command
-systemd-run --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'cat /etc/shadow > /tmp/shadow'
-#check
-cat /tmp/shadow | head -n 3
-#cleanup
-systemctl stop Atomic-Red-Team.service
-systemctl stop Atomic-Red-Team.timer
-rm -f /tmp/shadow

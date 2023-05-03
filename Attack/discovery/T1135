@@ -1,5 +1,0 @@
-Elevation Required;
-#check
-smbstatus --shares
-#cleanup
-ls

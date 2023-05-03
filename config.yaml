@@ -1,11 +1,11 @@
 attackinfo:
-  ssh_hostname: 10.10.21.203
+  ssh_hostname: 10.10.21.124
   ssh_username: ubuntu
-  ssh_password: "010404"
+  ssh_password: "010404grz"
   root_username: root
   root_password: "010404"
   attack_pattern: 2
-  attack_target: T1574.006
+  attack_target: T1552.004
 
 pfinfo:
   target_agent: 2
@@ -39,7 +39,7 @@ malwareinfo:
   tencent_agent:
      ftp_hostname: 10.10.21.203
      ftp_username: ubuntu
-     ftp_password: 010404
+     ftp_password: '010404'
      folder_path: Malwares
      upload_path: /home/ubuntu/upload
      accessKeyId: AKIDqbGl9NyRkrwxpfNwEPO8jAQTL5iQG1b2
@@ -49,7 +49,7 @@ malwareinfo:
   aliyun_agent:
     ftp_hostname: 10.10.21.106
     ftp_username: ubuntu
-    ftp_password: 010404grz
+    ftp_password: '010404grz'
     folder_path: Malwares
     upload_path: /home/ubuntu/upload
     accessKeyId: LTAI5tKzriqKJux8AWn72mDh

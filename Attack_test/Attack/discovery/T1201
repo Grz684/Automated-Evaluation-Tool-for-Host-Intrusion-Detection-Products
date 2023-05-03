@@ -1,0 +1,4 @@
+;
+#check
+echo "通过/etc/login.defs获取控制台的密码过期策略："
+cat /etc/login.defs

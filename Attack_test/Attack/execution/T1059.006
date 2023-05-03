@@ -1,0 +1,16 @@
+Elevation Required;
+#command
+which_python=$(which python3 || which python2 || which python)
+echo "import subprocess" > T1059.006.py
+echo "try:" >> T1059.006.py
+echo "    with open('/tmp/shadow', 'w') as tmp_shadow:" >> T1059.006.py
+echo "        subprocess.run(['cat', '/etc/shadow'], stdout=tmp_shadow, check=True)" >> T1059.006.py
+echo "except subprocess.CalledProcessError as e:" >> T1059.006.py
+echo "    print('Error: {}'.format(e))" >> T1059.006.py
+$which_python T1059.006.py
+#check
+echo "使用echo 代码片段 >> T1059.006.py的方式构建python脚本并运行，脚本作用等效于cat /etc/shadow > /tmp/shadow："
+cat /tmp/shadow | head -n 3
+#cleanup
+rm -f T1059.006.py
+rm -f /tmp/shadow

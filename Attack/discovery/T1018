@@ -1,5 +1,0 @@
-;
-#check
-ip neighbour show
-#cleanup
-ls

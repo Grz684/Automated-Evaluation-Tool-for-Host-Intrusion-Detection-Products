@@ -1,8 +1,0 @@
-;
-#pre
-mkdir /tmp/art-staging
-find / -name id_rsa 2>/dev/null -exec cp {} /tmp/art-staging \;
-#check
-file /tmp/art-staging/id_rsa
-#cleanup
-rm -rf /tmp/art-staging

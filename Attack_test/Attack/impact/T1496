@@ -1,0 +1,18 @@
+;
+#command
+tmux new-session -s yes_session -n first_window -d
+tmux send-keys -t yes_session:first_window "yes" Enter
+tmux new-window -t yes_session -n second_window
+tmux send-keys -t yes_session:second_window "yes" Enter
+tmux new-window -t yes_session -n third_window
+tmux send-keys -t yes_session:third_window "yes" Enter
+tmux new-window -t yes_session -n fourth_window
+tmux send-keys -t yes_session:fourth_window "yes" Enter
+tmux new-window -t yes_session -n fifth_window
+tmux send-keys -t yes_session:fifth_window "yes" Enter
+#check
+sleep 5
+echo "挂起多个资源占用进程："
+ps aux | grep -v grep | grep "yes$"
+#cleanup
+tmux kill-session -t yes_session

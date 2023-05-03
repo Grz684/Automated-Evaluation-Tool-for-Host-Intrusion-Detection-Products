@@ -1,0 +1,5 @@
+;
+#check
+echo "通过环境变量LANG发现系统语言信息："
+env | grep LANG
+printenv LANG

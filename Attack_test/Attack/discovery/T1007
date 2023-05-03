@@ -1,0 +1,4 @@
+;
+#check
+echo "使用systemctl --type=service枚举系统服务："
+systemctl --type=service

@@ -1,0 +1,6 @@
+;
+#check
+echo "依次使用users、w、who命令识别系统属主或用户："
+users ; w ; who
+#cleanup
+ls

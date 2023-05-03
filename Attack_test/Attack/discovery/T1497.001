@@ -1,0 +1,4 @@
+Elevation Required;
+#check
+echo "使用systemd-detect-virt检测当前系统环境是否为虚拟化环境："
+if (systemd-detect-virt) then echo "Virtualization Environment detected"; fi; if (dmidecode | egrep -i 'manufacturer|product|vendor' | grep -iE 'Oracle|VirtualBox|VMWare|Parallels') then echo "Virtualization Environment detected"; fi;
