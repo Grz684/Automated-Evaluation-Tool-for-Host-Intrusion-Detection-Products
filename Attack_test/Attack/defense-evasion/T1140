@@ -10,6 +10,7 @@ echo $ENCODED > /tmp/T1140.encoded && cat /tmp/T1140.encoded | base64 -d
 echo $ENCODED > /tmp/T1140.encoded && cat < /tmp/T1140.encoded | base64 -d
 bash -c "{echo,\"$(echo $ENCODED)\"}|{base64,-d}"
 #check
+echo "解码并执行base64编码混淆后的命令cat /etc/shadow > /tmp/shadow："
 cat /tmp/shadow | head -n 3
 #cleanup
 rm -f /tmp/shadow

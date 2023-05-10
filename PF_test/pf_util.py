@@ -49,7 +49,6 @@ class PFUtil:
             stop_time_stamp = int(time.mktime(stop_timeArray))
 
             line = init_f.readline()
-
         time_f = open(os.path.join(dirname, 'time'), mode='w', encoding='utf-8')
         test_time = str(stop_time_stamp - start_time_stamp)
         time_f.write(test_time + '\n')
@@ -216,11 +215,9 @@ class PFUtil:
         # 保存图片
         plt.savefig(fig_path, dpi=300)
         with open(file_path, 'a', encoding='utf-8') as f:
-            row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s \n".format("全部进程", func_average_cpu,
-                                                         func_average_mem, func_average_rd, func_average_wd)
+            row = "| {} | {:.2f}% | {:.2f}% \n".format("全部进程", func_average_cpu,
+                                                         func_max_cpu)
             f.write(row)
-            # f.write("总资源占用:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %"
-            #         .format(func_average_cpu, func_average_mem) + '\n\n')
             f.write(f"### {self.translation[test_function]}性能数据图：" + '\n\n')
             alt_text = "vul_scan_fig"
             f.write(f"![{alt_text}]({fig_path})\n")

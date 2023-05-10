@@ -1,14 +1,12 @@
 Elevation Required;
-#pre
-cat /etc/rsyslog.conf > /tmp/rsyslog.conf
+#command
+systemctl stop rsyslog ; systemctl disable rsyslog
+systemctl stop syslog.socket
 #check
-before=$(cat /etc/rsyslog.conf | tail -n 1)
-echo $(cat /etc/rsyslog.conf | tail -n 5)
-if [ -f "/etc/syslog.conf" ]; then sed -i '$ a #art_test_1562_006_2' /etc/syslog.conf; fi
-if [ -f "/etc/rsyslog.conf" ]; then sed -i '$ a #art_test_1562_006_2' /etc/rsyslog.conf; fi
-if [ -f "/etc/syslog-ng/syslog-ng.conf" ]; then sed -i '$ a #art_test_1562_006_2' /etc/syslog-ng/syslog-ng.conf; fi
-after=$(cat /etc/rsyslog.conf | tail -n 1)
-echo $(cat /etc/rsyslog.conf | tail -n 5)
-if [ "$before" = "$after" ]; then echo "No such file or directory"; else echo "Logging Configuration Changes success"; fi
+echo "disable rsyslog服务以阻止日志的收集和分析："
+status=$(systemctl status rsyslog | sed -n 3p | awk '{print $2}')
+systemctl status rsyslog
+if [ $status = "active" ]; then echo "No such file or directory"; else echo "<stop rsyslog success>"; fi;
 #cleanup
-cat /tmp/rsyslog.conf > /etc/rsyslog.conf
+systemctl start rsyslog ; systemctl enable rsyslog
+systemctl start syslog.socket

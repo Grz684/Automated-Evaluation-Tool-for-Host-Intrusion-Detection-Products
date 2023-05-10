@@ -1,14 +1,15 @@
 Elevation Required;
 #pre
-touch /home/ubuntu/test
+touch /tmp/test
 #check
+echo "使用touch -acmr命令修改/etc/passwd文件的时间戳"
 before=$(stat /etc/passwd | sed -n 6p)
-touch -acmr /home/ubuntu/test /etc/passwd
+touch -acmr /tmp/test /etc/passwd
 after=$(stat /etc/passwd | sed -n 6p)
-echo "timestamps before:"
+echo "修改前的时间戳:"
 echo $before
-echo "timestamps after:"
+echo "修改后的时间戳:"
 echo $after
-if [ "$before" = "$after" ]; then echo "No such file or directory"; else echo "modify timestamps success"; fi;
+if [ "$before" = "$after" ]; then echo "No such file or directory"; else echo "<modify timestamps success>"; fi;
 #cleanup
-rm -f /home/ubuntu/test
+rm -f /tmp/test

@@ -2,11 +2,12 @@ Elevation Required;
 #pre
 cat /var/log/auth.log > /tmp/backup.log
 #check
-echo "/var/log/auth.log before:"
-echo $(cat /var/log/auth.log | head -n 3)
+echo "清除linux系统日志/var/log/auth.log："
+echo "清理前/var/log/auth.log:"
+cat /var/log/auth.log | head -n 3
 echo 0> /var/log/auth.log
-echo "/var/log/auth.log after:"
-echo $(cat /var/log/auth.log)
-if test -z "$(cat /var/log/auth.log)"; then echo "overwrite success"; else echo "No such file or directory"; fi;
+echo "清理后/var/log/auth.log after:"
+cat /var/log/auth.log
+if test -z "$(cat /var/log/auth.log)"; then echo "<overwrite success>"; else echo "No such file or directory"; fi;
 #cleanup
 cat /tmp/backup.log > /var/log/auth.log

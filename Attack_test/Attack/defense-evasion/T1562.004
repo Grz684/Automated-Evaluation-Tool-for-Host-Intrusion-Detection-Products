@@ -2,9 +2,10 @@ Elevation Required;
 #command
 systemctl stop ufw
 #check
+echo "使用systemctl关闭防火墙ufw："
 status="$(systemctl status ufw | sed -n 3p | awk '{print $2}')"
-echo $(systemctl status ufw)
-if [ $status = "active" ]; then echo "No such file or directory"; else echo "stop ufw success"; fi;
+systemctl status ufw
+if [ $status = "active" ]; then echo "No such file or directory"; else echo "<stop ufw success>"; fi;
 #cleanup
 systemctl start ufw
 systemctl enable ufw

@@ -1,14 +1,12 @@
 Elevation Required;
-#pre
-if [ ! -f rootCA.key ]; then openssl genrsa -out rootCA.key 4096; fi
-openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out rootCA.crt
 #command
-mv rootCA.crt /usr/local/share/ca-certificates
+mv /tmp/rootCA.crt /usr/local/share/ca-certificates
 #check
+echo "在当前系统上安装根证书，以避免在连接到攻击者控制的网络服务器时发出警告："
 result=$(update-ca-certificates | head -n 2)
 echo $(ls /usr/local/share/ca-certificates)
 echo $result
-if [[ "$result" == *"1 added"* ]]; then echo "Install root CA success"; else echo "No such file or directory"; fi;
+if [[ "$result" == *"1 added"* ]]; then echo "<Install root CA success>"; else echo "No such file or directory"; fi;
 #cleanup
 rm -f /usr/local/share/ca-certificates/rootCA.crt
 rm -f /etc/ssl/certs/rootCA.pem

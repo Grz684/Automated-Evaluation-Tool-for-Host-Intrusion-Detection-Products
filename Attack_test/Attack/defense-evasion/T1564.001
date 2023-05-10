@@ -1,14 +1,15 @@
 ;
 #command
 mkdir /var/tmp/.hidden-directory
-cat /home/ubuntu/atomic-red-team-master/atomics/T1564.001/src/test > /var/tmp/.hidden-directory/.hidden-file
+mv /tmp/malware_test /var/tmp/.hidden-directory/.hidden-file
 #check
+echo "创建一个隐藏目录，并在该目录中创建一个隐藏木马文件："
 cd /var/tmp/.hidden-directory
 echo "ls:"
-echo $(ls)
+ls
 echo "ls -al:"
-echo $(ls -al)
+ls -al
 if [ -z "$(ls)" ]; then echo ""; else echo "No such file or directory"; fi
-if [ -n "$(ls -al | grep .hidden-file)" ];then echo "Create a hidden file success"; else echo "No such file or directory"; fi
+if [ -n "$(ls -al | grep .hidden-file)" ];then echo "<Create a hidden file success>"; else echo "No such file or directory"; fi
 #cleanup
 rm -rf /var/tmp/.hidden-directory/

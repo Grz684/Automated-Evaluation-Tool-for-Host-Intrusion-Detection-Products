@@ -1,0 +1,10 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides : Atomic Test T1543.002
+# Required-Start: $all
+# Required-Stop :
+# Default-Start: 2 3 4 5
+# Default-Stop:
+# Short Description: Atomic Test for Systemd Service Creation
+### END INIT INFO
+python3 -c "import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))"

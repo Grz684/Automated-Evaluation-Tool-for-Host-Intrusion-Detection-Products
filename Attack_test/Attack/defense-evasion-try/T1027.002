@@ -1,0 +1,13 @@
+;
+#pre
+echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install upx) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y upx))'
+#command
+cd /tmp
+chmod u+x malware_test
+python3 upx.py
+#check
+echo "使用upx给木马程序加壳，查看加壳后的文件："
+file /tmp/malware_test.packed
+#clean
+cd /tmp
+rm -f upx.py malware_test malware_test.packed

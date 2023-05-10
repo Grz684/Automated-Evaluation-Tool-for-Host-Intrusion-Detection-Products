@@ -52,4 +52,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     xor_encrypt_decrypt(input_file, output_file, key)
-    print(f"{'Encryption' if operation == 'encrypt' else 'Decryption'} completed. Check {output_file} for the result.")
+    print(f"测试用文件生成：{'Encryption' if operation == 'encrypt' else 'Decryption'} completed. Check {output_file} for the result.")

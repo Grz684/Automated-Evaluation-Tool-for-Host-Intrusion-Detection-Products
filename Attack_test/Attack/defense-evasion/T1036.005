@@ -4,7 +4,9 @@ mkdir $HOME/...
 cp $(which sh) $HOME/...
 $HOME/.../sh -c "cat /etc/shadow > /tmp/shadow"
 #check
-cat /tmp/shadow | head -n 3
+echo "从伪装成当前父目录的目录中（…而不是普通的..）创建并执行sh命令，查看该伪装成父目录的目录："
+cd $HOME
+ls -al | head -n 4
 #cleanup
 rm -f $HOME/.../sh
 rm -f /tmp/shadow

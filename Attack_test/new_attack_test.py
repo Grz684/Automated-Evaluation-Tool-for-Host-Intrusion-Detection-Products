@@ -103,13 +103,105 @@ def prepare(command_file, client):
         sftp.put(local_file, remote_file)
         # 关闭SFTP会话
         sftp.close()
-
+    elif command_file == os.path.join("Attack", "credential-access", "T1555"):
+        local_file = os.path.join("attack_file", "LaZagne.zip")
+        remote_file = "/tmp/LaZagne.zip"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "credential-access", "T1556.003"):
+        local_file = os.path.join("attack_file", "pam_evil.c")
+        remote_file = "/tmp/pam_evil.c"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "persistence", "T1543.002"):
+        local_file = os.path.join("attack_file", "T1543.002")
+        remote_file = "/tmp/T1543.002"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "persistence", "T1547.006"):
+        local_file = os.path.join("attack_file", "Diamorphine-master.zip")
+        remote_file = "/tmp/Diamorphine-master.zip"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion", "T1014"):
+        local_file = os.path.join("attack_file", "Diamorphine-master.zip")
+        remote_file = "/tmp/Diamorphine-master.zip"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion", "T1027.001"):
+        local_file = os.path.join("attack_file", "malware_test")
+        remote_file = "/tmp/malware_test"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion-try", "T1027.002"):
+        local_file1 = os.path.join("attack_file", "malware_test")
+        remote_file1 = "/tmp/malware_test"
+        local_file2 = os.path.join("attack_file", "upx.py")
+        remote_file2 = "/tmp/upx.py"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file1, remote_file1)
+        sftp.put(local_file2, remote_file2)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion", "T1222.002"):
+        local_file = os.path.join("attack_file", "malware_test")
+        remote_file = "/tmp/malware_test"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion", "T1553.004"):
+        local_file = os.path.join("attack_file", "rootCA.crt")
+        remote_file = "/tmp/rootCA.crt"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion", "T1564.001"):
+        local_file = os.path.join("attack_file", "malware_test")
+        remote_file = "/tmp/malware_test"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
 
 def exec_attack(command_file):
     first_line = read_first_line(command_file)
     need_wait = 0
 
-    print(f"需求标记: {first_line}")
+    print(f"权限需求标记: {first_line}")
     if "Elevation Required" in first_line:
         ssh = SSH(ssh_hostname, root_username, root_password)
         client = ssh.connect()

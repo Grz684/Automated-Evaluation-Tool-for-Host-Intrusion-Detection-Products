@@ -1,5 +1,8 @@
 Elevation Required;
 #command
 useradd -M -N -r -s /bin/bash -c evil_account evil_user
+#check
+echo "使用useradd创建一个本地账户，查看/etc/passwd最后一行：："
+cat /etc/passwd | tail -n 1
 #cleanup
-userdel #{username}
+userdel evil_user

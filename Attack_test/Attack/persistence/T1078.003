@@ -3,7 +3,8 @@ Elevation Required;
 useradd -g 0 -M -d /root -s /bin/bash butter
 if [ $(cat /etc/os-release | grep -i 'Name="ubuntu"') ]; then echo "butter:BetterWithButter" | sudo chpasswd; else echo "BetterWithButter" | passwd --stdin butter; fi;
 #check
+echo "使用useradd创建一个有效账户，设置用户GID为0（root权限），查看/etc/passwd最后一行："
 cat /etc/passwd | tail -n 1
-if [ "$(groups butter)" = "butter : root" ]; then echo "Create a new user in Linux with root GID success"; else echo "No such file or directory"; fi;
+if [ "$(groups butter)" = "butter : root" ]; then echo "<Create a new user in Linux with root GID success>"; else echo "No such file or directory"; fi;
 #cleanup
 userdel butter
