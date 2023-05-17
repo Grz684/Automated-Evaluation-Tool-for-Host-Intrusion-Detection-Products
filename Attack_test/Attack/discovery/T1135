@@ -1,6 +1,6 @@
 ;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install epel-release samba) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y samba))'
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install epel-release samba) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y samba))'
 #check
 echo "使用smbstatus发现网络共享信息："
-echo "010404grz" | sudo -S smbstatus --shares
+echo "%password%" | sudo -S smbstatus --shares

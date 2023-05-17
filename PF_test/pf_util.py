@@ -215,8 +215,9 @@ class PFUtil:
         # 保存图片
         plt.savefig(fig_path, dpi=300)
         with open(file_path, 'a', encoding='utf-8') as f:
-            row = "| {} | {:.2f}% | {:.2f}% \n".format("全部进程", func_average_cpu,
-                                                         func_max_cpu)
+            row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s \n".format("全部进程", func_average_cpu,
+                                                                                  func_average_mem, func_average_rd,
+                                                                                  func_average_wd)
             f.write(row)
             f.write(f"### {self.translation[test_function]}性能数据图：" + '\n\n')
             alt_text = "vul_scan_fig"

@@ -1,6 +1,6 @@
 ;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install iproute2) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2))'
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install iproute2) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2))'
 #check
 echo "使用ip neighbor命令显示共享同一网段的主机的已知链路层（ARP表）地址："
 ip neighbour show

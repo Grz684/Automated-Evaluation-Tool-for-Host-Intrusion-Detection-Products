@@ -1,4 +1,8 @@
 import time
+
+import yaml
+
+from PF_test.pf_util import PFUtil
 from ssh import SSH
 import os
 from PF_test.ali_pf_test.aliapi import AliApi
@@ -22,8 +26,8 @@ class AliPFTest:
         self.ali_target_processes = ["AliDetect", "AliYunDunUpdate", "AliYunDun", "AliYunDunMonitor", "AliSecGuard",
                                      "AliHips", "AliNet", "AliSecureCheckAdvanced"]
         self.ali_test_functions = ["nothing_open", "self_protection", "Web_backdoor_connection_defense",
-                                   "Network_defense",
-                                   "anti_virus", "vul_scan", "assets_scan", "virus_scan", "baseline_scan"]
+                                   "Network_defense", "anti_virus",
+                                   "vul_scan", "assets_scan", "virus_scan", "baseline_scan"]
         self.ali_static_funcs_api_types = ["alisecguard", "webshell_cloud_breaking", "alinet", "auto_breaking"]
         self.accessKeyId = accessKeyId
         self.accessKeySecret = accessKeySecret
@@ -31,6 +35,15 @@ class AliPFTest:
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.command_file_path = os.path.join(self.script_dir, '../..', 'pf_test_commands.txt')
         self.ali_dir_path = os.path.join(self.script_dir, 'ali')
+
+        self.ali_translation = {"vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "virus_scan": "病毒扫描",
+                                    "baseline_scan": "基线扫描"}
+        self.baseline_database = os.path.join(self.script_dir, "ali_cis_baseline_scan_items.db")
+
+        self.pf_util = PFUtil(self.ali_test_functions, self.ali_dir_path, self.ali_target_processes,
+                              self.ali_translation)
+        self.handle_test_data = self.pf_util.handle_test_data
+        self.display_test_data = self.pf_util.display_test_data
 
 
     def ali_agent_func_pf_test(self, function_id, test_time=30):
@@ -155,104 +168,6 @@ class AliPFTest:
 
         return activ_status
 
-    def handle_test_data(self, function_id):
-        print("性能数据统计处理中.....")
-        test_function = self.ali_test_functions[function_id]
-        init_file_name = os.path.join(self.ali_dir_path, "init_" + test_function + ".txt")
-        dirname = os.path.join(self.ali_dir_path, test_function)
-        os.makedirs(dirname, exist_ok=True)
-        result_files = dict()
-        for index in range(len(self.ali_target_processes)):
-            file_name = os.path.join(dirname, self.ali_target_processes[index])
-            f = open(file_name, mode='w', encoding='utf-8')
-            # f.write("//handle time: " + time.ctime() + "\n")
-            result_files[self.ali_target_processes[index]] = f
-
-        init_f = open(init_file_name, mode='r', encoding='utf-8')
-        line = init_f.readline()
-        json_start_line = json.loads(line)
-
-        start_time = json_start_line['time']
-        start_time = "2001-4-4 " + start_time
-        start_timeArray = time.strptime(start_time, "%Y-%m-%d %H:%M:%S")
-        start_time_stamp = int(time.mktime(start_timeArray))
-        stop_time_stamp = 0
-
-        while line:
-            json_line = json.loads(line)
-            command = json_line['command']
-            command_parts = command.split('/')
-            command_process = command_parts[-1]
-
-            if command_process in result_files.keys():
-                result_files[command_process].write(line)
-
-            stop_time = "2001-4-4 " + json_line['time']
-            stop_timeArray = time.strptime(stop_time, "%Y-%m-%d %H:%M:%S")
-            stop_time_stamp = int(time.mktime(stop_timeArray))
-
-            line = init_f.readline()
-
-        time_f = open(os.path.join(dirname, "time"), mode='w', encoding='utf-8')
-        test_time = str(stop_time_stamp - start_time_stamp)
-        time_f.write(test_time)
-        # 关闭文件句柄
-        for index in range(len(self.ali_target_processes)):
-            result_files[self.ali_target_processes[index]].close()
-        init_f.close()
-        time_f.close()
-
-    def display_test_data(self, function_id):
-        test_function = self.ali_test_functions[function_id]
-        dirname = os.path.join(self.ali_dir_path, test_function)
-
-        time_f = open(os.path.join(dirname, "time"), mode='r', encoding='utf-8')
-        test_time = int(time_f.readline())
-        time_f.close()
-
-        print("在 {} 场景下，各进程组件性能测试结果如下（场景持续时间{}s）：".format(test_function, test_time))
-
-        func_average_cpu = 0.0
-        func_average_mem = 0.0
-        func_average_disk_read = 0.0
-        func_average_disk_write = 0.0
-
-        for index in range(len(self.ali_target_processes)):
-            total_cpu = 0.0
-            total_mem = 0.0
-            total_disk_read = 0.0
-            total_disk_write = 0.0
-
-            file_name = os.path.join(dirname, self.ali_target_processes[index])
-            f = open(file_name, mode='r', encoding='utf-8')
-            line = f.readline()
-            while line:
-                json_line = json.loads(line)
-                total_cpu += float(json_line['cpu'])
-                total_mem += float(json_line['mem'])
-                total_disk_read += float(json_line['kB_rd'])
-                total_disk_write += float(json_line['kB_wr'])
-
-                line = f.readline()
-
-            f.close()
-            average_cpu = total_cpu / test_time
-            average_mem = total_mem / test_time
-            average_disk_rd = total_disk_read / test_time
-            average_disk_wr = total_disk_write / test_time
-
-            func_average_cpu += average_cpu
-            func_average_mem += average_mem
-            func_average_disk_read += average_disk_rd
-            func_average_disk_write += average_disk_wr
-            print(
-                "进程{}:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %, average_disk_rd: {:.2f} kb/s, average_disk_write: {:.2f} kb/s"
-                .format(self.ali_target_processes[index], average_cpu, average_mem, average_disk_rd, average_disk_wr))
-
-        print(
-            "总资源占用:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %, average_disk_rd: {:.2f} kb/s, average_disk_write: {:.2f} kb/s"
-            .format(func_average_cpu, func_average_mem, func_average_disk_read, func_average_disk_write))
-
     def ali_pf_test_static_funcs(self, test_time):
         self.ali_agent_func_pf_test(0, test_time)
         self.handle_test_data(0)
@@ -287,28 +202,41 @@ class AliPFTest:
 
     def ali_pf_test_vul(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        aliapi.vul_scan()
-        self.ali_agent_func_pf_test(5)
+        # aliapi.vul_scan()
+        # self.ali_agent_func_pf_test(5)
         self.handle_test_data(5)
         self.display_test_data(5)
 
     def ali_pf_test_assets(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        aliapi.assets_scan()
-        self.ali_agent_func_pf_test(6)
+        # aliapi.assets_scan()
+        # self.ali_agent_func_pf_test(6)
         self.handle_test_data(6)
         self.display_test_data(6)
 
     def ali_pf_test_virus(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        aliapi.start_virus_scan_task()
-        self.ali_agent_func_pf_test(7)
+        # aliapi.start_virus_scan_task()
+        # self.ali_agent_func_pf_test(7)
         self.handle_test_data(7)
         self.display_test_data(7)
 
     def ali_pf_test_baseline(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        aliapi.baseline_scan()
-        self.ali_agent_func_pf_test(8)
+        # aliapi.baseline_scan()
+        # self.ali_agent_func_pf_test(8)
         self.handle_test_data(8)
         self.display_test_data(8)
+
+if __name__ == '__main__':
+    with open("../../config.yaml", "r") as f:
+        config = yaml.safe_load(f)
+    agent = config["pfinfo"]["aliyun_agent"]
+    ssh_hostname = str(agent["ssh_hostname"])
+    ssh_username = str(agent["ssh_username"])
+    ssh_password = str(agent["ssh_password"])
+    accessKeyId = str(agent["accessKeyId"])
+    accessKeySecret = str(agent["accessKeySecret"])
+    uuid = str(agent["uuid"])
+    ali = AliPFTest(ssh_hostname, ssh_username, ssh_password, accessKeyId, accessKeySecret, uuid)
+    ali.ali_pf_test_assets()

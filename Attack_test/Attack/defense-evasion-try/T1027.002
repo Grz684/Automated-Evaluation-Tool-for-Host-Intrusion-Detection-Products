@@ -1,6 +1,6 @@
 ;
 #pre
-echo "010404grz" | sudo -S sh -c '((which yum && sudo yum -y install upx) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y upx))'
+echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install upx) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y upx))'
 #command
 cd /tmp
 chmod u+x malware_test

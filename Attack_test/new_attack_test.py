@@ -19,7 +19,19 @@ root_username = str(agent['root_username'])
 root_password = str(agent['root_password'])
 attack_pattern = str(agent['attack_pattern'])
 attack_target = str(agent['attack_target'])
-
+assist_hostname = str(agent["assist_hostname"])
+assist_username = str(agent["assist_username"])
+assist_password = str(agent["assist_password"])
+variables = {
+    "test": "ccc",
+    "host_name": ssh_hostname,
+    "password": ssh_password,
+    "user": ssh_username,
+    "root_password": root_password,
+    "assist_user": assist_username,
+    "assist_hostname": assist_hostname,
+    "assist_password": assist_password
+}
 
 def read_first_line(file_path):
     with open(file_path, 'r', encoding='UTF-8') as file:
@@ -43,7 +55,12 @@ def read_commands_from_file(file_path):
                 combined_command = []
             current_section = line.strip()
         else:
-            combined_command.append(line.strip())
+            # 预定义参数渲染
+            command = line.strip()
+            for match in re.findall(r'%(\w+)%', command):
+                if match in variables:
+                    command = command.replace(f'%{match}%', variables[match])
+            combined_command.append(command)
 
     if current_section and combined_command:
         commands_dict[current_section] = ' ; '.join(combined_command)
@@ -59,12 +76,15 @@ def prepare(command_file, client):
         command = ["python", script_path, "encrypt", input_file_path, output_file_path, ssh_hostname]
         subprocess.run(command, text=True)
 
-        local_file = output_file_path
-        remote_file = "/tmp/test_T1480_enc"
+        local_file_1 = output_file_path
+        remote_file_1 = "/tmp/test_T1480_enc"
+        local_file_2 = os.path.join("attack_file", "T1480.001.py")
+        remote_file_2 = "/tmp/T1480.001.py"
         # 创建SFTP会话
         sftp = client.open_sftp()
         # 将本地文件传输到远程主机
-        sftp.put(local_file, remote_file)
+        sftp.put(local_file_1, remote_file_1)
+        sftp.put(local_file_2, remote_file_2)
         # 关闭SFTP会话
         sftp.close()
     elif command_file == os.path.join("Attack", "discovery", "T1040"):
@@ -115,6 +135,15 @@ def prepare(command_file, client):
     elif command_file == os.path.join("Attack", "credential-access", "T1556.003"):
         local_file = os.path.join("attack_file", "pam_evil.c")
         remote_file = "/tmp/pam_evil.c"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "persistence", "T1098.004"):
+        local_file = os.path.join("attack_file", "id_rsa.pub")
+        remote_file = "/tmp/id_rsa.pub"
         # 创建SFTP会话
         sftp = client.open_sftp()
         # 将本地文件传输到远程主机
@@ -196,6 +225,57 @@ def prepare(command_file, client):
         sftp.put(local_file, remote_file)
         # 关闭SFTP会话
         sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion-try", "T1055"):
+        local_file = os.path.join("attack_file", "linux-process-injection.zip")
+        remote_file = "/tmp/linux-process-injection.zip"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion-try", "T1205.001"):
+        local_file = os.path.join("attack_file", "knock-knock.c")
+        remote_file = "/tmp/knock-knock.c"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion-try", "T1548.001"):
+        local_file = os.path.join("attack_file", "cap.c")
+        remote_file = "/tmp/cap.c"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file, remote_file)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion-try", "T1574.006"):
+        local_file_1 = os.path.join("attack_file", "myhook.c")
+        remote_file_1 = "/tmp/myhook.c"
+        local_file_2 = os.path.join("attack_file", "target_program.c")
+        remote_file_2 = "/tmp/target_program.c"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file_1, remote_file_1)
+        sftp.put(local_file_2, remote_file_2)
+        # 关闭SFTP会话
+        sftp.close()
+    elif command_file == os.path.join("Attack", "defense-evasion-try", "T1620"):
+        local_file_1 = os.path.join("attack_file", "ezuri.zip")
+        remote_file_1 = "/tmp/ezuri.zip"
+        local_file_2 = os.path.join("attack_file", "meterpreter_reverse_tcp.elf")
+        remote_file_2 = "/tmp/meterpreter_reverse_tcp.elf"
+        # 创建SFTP会话
+        sftp = client.open_sftp()
+        # 将本地文件传输到远程主机
+        sftp.put(local_file_1, remote_file_1)
+        sftp.put(local_file_2, remote_file_2)
+        # 关闭SFTP会话
+        sftp.close()
 
 def exec_attack(command_file):
     first_line = read_first_line(command_file)
@@ -242,7 +322,7 @@ def exec_attack(command_file):
                     else:
                         print(command_file + ": 攻击失败")
                         print("攻击失败情况：")
-                    print(output)
+                print(output)
             else:
                 error_output = stderr.read().decode('utf-8')
                 print(f"命令执行报错: {error_output}")

@@ -8,9 +8,9 @@ visudo -c -f /etc/sudoers
 #check
 echo "使用visudo编辑/etc/sudoers文件，在文件末尾添加Defaults !tty_tickets禁用tty_tickets选项，使得sudo会话在用户的所有TTY（终端）之间共享"
 echo "在用户的另一个终端中无需密码即可执行sudo su："
-tmux new-session -d -s another_session "ssh -o StrictHostKeyChecking=no ubuntu@localhost"
+tmux new-session -d -s another_session "ssh -o StrictHostKeyChecking=no %user%@localhost"
 sleep 1
-tmux send-keys -t another_session:0 "010404grz" Enter
+tmux send-keys -t another_session:0 "%password%" Enter
 sleep 1
 tmux send-keys -t another_session:0 "sudo su" Enter
 sleep 1

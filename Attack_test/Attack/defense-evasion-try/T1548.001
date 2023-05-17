@@ -1,8 +1,7 @@
 ;
 #command
-cp /home/ubuntu/attack/cap.c /tmp/cap.c
 gcc /tmp/cap.c -o /tmp/cap
-echo '010404' | sudo -S setcap cap_setuid=ep /tmp/cap
+echo '%password%' | sudo -S setcap cap_setuid=ep /tmp/cap
 #check
 pri1=$(ls -n /tmp/cap | awk '{print $3}')
 content=$(/tmp/cap)
@@ -16,4 +15,4 @@ echo "normal user exec /tmp/cap to cat /etc/shadow:"
 echo $shadow
 if [ "$pri1" = "$pri2" ]; then echo "No such file or directory"; fi
 #cleanup
-echo '010404' | sudo -S rm -f /tmp/cap /tmp/cap.c
+echo '%password%' | sudo -S rm -f /tmp/cap /tmp/cap.c

@@ -181,8 +181,8 @@ class TencentPFTest:
 
     def tencent_pf_test_virus(self):
         tencentapi = TencentApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        tencentapi.scan_malware()
-        self.tencent_agent_func_pf_test(3)
+        # tencentapi.scan_malware()
+        # self.tencent_agent_func_pf_test(3)
         self.handle_test_data(3)
         self.display_test_data(3)
 
@@ -259,6 +259,4 @@ if __name__ == '__main__':
     accessKeySecret = str(agent["accessKeySecret"])
     uuid = str(agent["uuid"])
     tencent = TencentPFTest(ssh_hostname, ssh_username, ssh_password, accessKeyId, accessKeySecret, uuid)
-    tencent.tencent_pf_test_assets()
-    tencent.tencent_pf_test_vul()
-    tencent.tencent_pf_test_baseline()
+    tencent.tencent_pf_test_virus()
