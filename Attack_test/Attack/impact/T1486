@@ -1,10 +1,11 @@
 Elevation Required;
+#pre
+(which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
 #command
 which_ccencrypt=`which ccencrypt`
 which_ccdecrypt=`which ccdecrypt`
 cp /etc/passwd /tmp/passwd
 $which_ccencrypt -K 1234 /etc/passwd
-file /etc/passwd.cpt
 #check
 result=$(cat /etc/passwd)
 echo "/etc/passwd:"

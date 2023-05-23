@@ -1,59 +1,124 @@
+import time
+
+import yaml
+
+from PF_test.pf_util import PFUtil
+from ssh import SSH
+import os
 import json
 
-ali_target_processes = ["hisec_agent"]
-ali_test_functions = ["nothing_open"]
+class HisecPFTest:
+    def __init__(self, ssh_hostname, ssh_username, ssh_password):
+        self.ssh_hostname = ssh_hostname
+        self.ssh_username = ssh_username
+        self.ssh_password = ssh_password
+        self.hisec_target_processes = ["wsssr_defence_service", "wsssr_defence_daemon"]
+        self.hisec_test_functions = ["nothing_open", "vul_scan", "assets_scan", "virus_scan", "baseline_scan"]
 
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.command_file_path = os.path.join(self.script_dir, '..', "pf_test_commands.txt")
+        self.hisec_dir_path = os.path.join(self.script_dir, 'hisec')
 
-def display_test_data(function_id):
-    test_function = ali_test_functions[function_id]
-    dirname = "huawei/" + test_function
+        self.hisec_translation = {"nothing_open": "静默状态", "vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "virus_scan": "病毒扫描",
+                                  "baseline_scan": "基线扫描"}
 
-    test_time = 1000
+        self.pf_util = PFUtil(self.hisec_test_functions, self.hisec_dir_path, self.hisec_target_processes,
+                              self.hisec_translation)
+        self.handle_test_data = self.pf_util.handle_test_data
+        self.display_test_data = self.pf_util.display_test_data
 
-    print("在仅开启 {} 功能的情况下，各进程组件性能测试结果如下（测试时间{}s）：".format(test_function, test_time))
+    def hisec_agent_func_pf_test(self, function_id):
+        test_function = self.hisec_test_functions[function_id]
+        # 打开ssh连接
+        ssh = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
 
-    func_average_cpu = 0.0
-    func_average_mem = 0.0
-    func_average_disk_read = 0.0
-    func_average_disk_write = 0.0
+        self.wait_for_start()
 
-    for index in range(len(ali_target_processes)):
-        total_cpu = 0.0
-        total_mem = 0.0
-        total_disk_read = 0.0
-        total_disk_write = 0.0
+        # 后台挂起检测任务
+        print(f"{test_function}场景已建立，开始采集性能数据.....")
+        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
+        ssh_task.exec_command_without_stdout_infile(self.command_file_path, 11)
+        ssh_task.close()
 
-        file_name = dirname + "/" + ali_target_processes[index]
-        f = open(file_name, mode='r', encoding='utf-8')
-        line = f.readline()
-        while line:
-            json_line = json.loads(line)
-            total_cpu += float(json_line['cpu'])
-            total_mem += float(json_line['mem'])
-            total_disk_read += float(json_line['kB_rd'])
-            total_disk_write += float(json_line['kB_wr'])
+        self.wait_for_end()
 
-            line = f.readline()
+        # 结束检测任务
+        print(f"本场景已结束，正在停止采集性能数据.....")
+        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
+        ssh_task.exec_command_infile(self.command_file_path, 5)
+        ssh_task.close()
+        # 获取检测结果
+        time.sleep(5)
+        ini_test_result = ssh.exec_command_infile(self.command_file_path, 7)
+        ini_test_result = ini_test_result.decode().strip()
 
+        os.makedirs(self.hisec_dir_path, exist_ok=True)
+        file_name = os.path.join(self.hisec_dir_path, "init_" + test_function + ".txt")
+        f = open(file_name, mode='w', encoding='utf-8')
+        f.write(ini_test_result)
+        ssh.close()
         f.close()
-        average_cpu = total_cpu / test_time
-        average_mem = total_mem / test_time
-        average_disk_rd = total_disk_read / test_time
-        average_disk_wr = total_disk_write / test_time
 
-        func_average_cpu += average_cpu
-        func_average_mem += average_mem
-        func_average_disk_read += average_disk_rd
-        func_average_disk_write += average_disk_wr
-        print(
-            "进程{}:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %, average_disk_rd: {:.2f} kb/s, average_disk_write: {:.2f} kb/s"
-            .format(ali_target_processes[index], average_cpu, average_mem, average_disk_rd, average_disk_wr))
+    def wait_for_start(self):
+        input("请按回车键开始采集性能数据...")
 
-    print(
-        "总资源占用:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %, average_disk_rd: {:.2f} kb/s, average_disk_write: {:.2f} kb/s"
-        .format(func_average_cpu, func_average_mem, func_average_disk_read, func_average_disk_write))
+    def wait_for_end(self):
+        input("请按回车键停止采集性能数据...")
+
+    def hisec_pf_test_all_funcs(self):
+        self.hisec_pf_test_nothing()
+        print(" ")
+        self.hisec_pf_test_vul()
+        print(" ")
+        self.hisec_pf_test_assets()
+        print(" ")
+        self.hisec_pf_test_virus()
+        print(" ")
+        self.hisec_pf_test_baseline()
+
+    def hisec_pf_test_nothing(self):
+        self.hisec_agent_func_pf_test(0)
+        self.handle_test_data(0)
+        self.display_test_data(0)
+
+    def hisec_pf_test_vul(self):
+        # hisecapi = hisecApi(self.accessKeyId, self.accessKeySecret, self.uuid)
+        # hisecapi.vul_scan()
+        self.hisec_agent_func_pf_test(1)
+        self.handle_test_data(1)
+        self.display_test_data(1)
+
+    def hisec_pf_test_assets(self):
+        # hisecapi = hisecApi(self.accessKeyId, self.accessKeySecret, self.uuid)
+        # hisecapi.assets_scan()
+        # self.hisec_agent_func_pf_test(2)
+        self.handle_test_data(2)
+        self.display_test_data(2)
+
+    def hisec_pf_test_virus(self):
+        # hisecapi = hisecApi(self.accessKeyId, self.accessKeySecret, self.uuid)
+        # hisecapi.start_virus_scan_task()
+        self.hisec_agent_func_pf_test(3)
+        self.handle_test_data(3)
+        self.display_test_data(3)
+
+    def hisec_pf_test_baseline(self):
+        # hisecapi = hisecApi(self.accessKeyId, self.accessKeySecret, self.uuid)
+        # hisecapi.baseline_scan()
+        self.hisec_agent_func_pf_test(4)
+        self.handle_test_data(4)
+        self.display_test_data(4)
 
 
-for i in range(len(ali_test_functions)):
-    display_test_data(i)
-    print("\n")
+if __name__ == '__main__':
+    with open("../../config.yaml", "r") as f:
+        config = yaml.safe_load(f)
+    agent = config["pfinfo"]["hisec_agent"]
+    ssh_hostname = str(agent["ssh_hostname"])
+    ssh_username = str(agent["ssh_username"])
+    ssh_password = str(agent["ssh_password"])
+    # accessKeyId = str(agent["accessKeyId"])
+    # accessKeySecret = str(agent["accessKeySecret"])
+    # uuid = str(agent["uuid"])
+    hisec = HisecPFTest(ssh_hostname, ssh_username, ssh_password)
+    hisec.hisec_pf_test_assets()

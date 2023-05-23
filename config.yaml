@@ -1,11 +1,11 @@
 attackinfo:
-  ssh_hostname: 10.10.21.203
+  ssh_hostname: 10.10.21.133
   ssh_username: ubuntu
   ssh_password: "010404grz"
   root_username: root
   root_password: "010404"
   attack_pattern: 2
-  attack_target: T1620
+  attack_target: T1014
   assist_hostname: 10.10.21.232
   assist_username: grz
   assist_password: "010404grz"
@@ -37,6 +37,11 @@ pfinfo:
      accessKeyId: AKIDqbGl9NyRkrwxpfNwEPO8jAQTL5iQG1b2
      accessKeySecret: MckjeP0QfhYCg2tX5RiKrCMN4iCZlolY
      uuid: ebb72142-e05d-e812-505e-05bf0d7b4907
+
+  hisec_agent:
+    ssh_hostname: 10.10.21.124
+    ssh_username: root
+    ssh_password: '010404'
 
 malwareinfo:
   tencent_agent:

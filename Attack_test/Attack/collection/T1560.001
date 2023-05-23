@@ -1,4 +1,6 @@
 Elevation Required;
+#pre
+(which yum && sudo yum -y install zip) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y zip)
 #command
 zip /tmp/shadow_zip /etc/shadow
 #check

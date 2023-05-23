@@ -1,0 +1,3 @@
+{"cpu":"0.00","minflt":"1.00","majflt":"0.00","VSZ":"785932","RSS":"3432","mem":"0.17","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"16:04:10"}
+{"cpu":"0.00","minflt":"1.00","majflt":"0.00","VSZ":"785932","RSS":"3432","mem":"0.17","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"16:04:20"}
+{"cpu":"1.00","minflt":"0.00","majflt":"0.00","VSZ":"785932","RSS":"3432","mem":"0.17","kB_rd":"0.00","kB_wr":"0.00","kB_ccwr":"0.00","command":"/usr/local/wsssr_defence_agent/wsssr_defence_daemon","time":"16:04:24"}

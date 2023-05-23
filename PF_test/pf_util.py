@@ -98,130 +98,214 @@ class PFUtil:
         func_average_mem = 0.0
         func_average_rd = 0.0
         func_average_wd = 0.0
-        fig, axs = plt.subplots(2, 2, figsize=(20, 8))
+        func_average_iops = 0.0
+        func_average_network_io = 0.0
+        fig, axs = plt.subplots(6, 2, figsize=(12, 12))
         processes_pf_list = []
 
-        with open(file_path, 'a', encoding='utf-8') as result_f:
-            header = "| 进程名 | vcpu平均占用率 | 驻留物理内存平均大小（RSS） | 读数据平均速率 | 写数据平均速率 \n| --- | --- | --- | --- | --- |\n"
-            result_f.write(header)
+        # 打开结果文件
+        result_f = open(file_path, 'a', encoding='utf-8')
 
-            for index in range(len(self.target_processes)):
+        # 写入平均值
+        header = "| 进程名 | vcpu平均占用率 | RSS平均大小 | 读数据平均速率 | 写数据平均速率 | IOPS平均值 | network_io平均值 \n" \
+                 "| --- | --- | --- | --- | --- | --- | --- |\n"
+        result_f.write(header)
 
-                process_cpu_total = 0.0
-                process_mem_total = 0.0
-                process_rd_total = 0.0
-                process_wd_total = 0.0
-                process_cpu_usage = []
-                process_mem_usage = []
-                process_rd_usage = []
-                process_wd_usage = []
-                process_time = []
+        for index in range(len(self.target_processes)):
 
-                file_name = os.path.join(dirname, self.target_processes[index])
-                if PFUtil.is_file_empty(file_name):
-                    continue
-                f = open(file_name, mode='r', encoding='utf-8')
+            process_cpu_total = 0.0
+            process_mem_total = 0.0
+            process_rd_total = 0.0
+            process_wd_total = 0.0
+            process_iops_total = 0.0
+            process_network_io_total = 0.0
+            process_cpu_usage = []
+            process_mem_usage = []
+            process_rd_usage = []
+            process_wd_usage = []
+            process_iops_usage = []
+            process_network_io_usage = []
+            process_time = []
+
+            file_name = os.path.join(dirname, self.target_processes[index])
+            if PFUtil.is_file_empty(file_name):
+                continue
+            f = open(file_name, mode='r', encoding='utf-8')
+            line = f.readline().strip()
+
+            while line:
+                json_line = json.loads(line)
+
+                time_object = datetime.strptime(json_line['time'], time_format)
+                time_zeroed = (time_object - start_time_object).total_seconds()
+                process_time.append(time_zeroed)
+
+                process_cpu_total += float(json_line['cpu'])
+                process_mem_total += float(json_line['RSS']) / 1024
+                process_rd_total += float(json_line['kB_rd'])
+                process_wd_total += float(json_line['kB_wr'])
+                process_iops_total += float(json_line['cpu'])
+                process_network_io_total += float(json_line['mem'])
+
+                process_cpu_usage.append(float(json_line['cpu']))
+                process_mem_usage.append(float(json_line['RSS']) / 1024)
+                process_rd_usage.append(float(json_line['kB_rd']))
+                process_wd_usage.append(float(json_line['kB_wr']))
+                process_iops_usage.append(float(json_line['cpu']))
+                process_network_io_usage.append(float(json_line['mem']))
+
                 line = f.readline().strip()
 
-                while line:
-                    json_line = json.loads(line)
+            f.close()
 
-                    time_object = datetime.strptime(json_line['time'], time_format)
-                    time_zeroed = (time_object - start_time_object).total_seconds()
-                    process_time.append(time_zeroed)
+            # 将当前进程的性能数据放入列表中
+            processes_pf_list.append(
+                zip(process_time, process_cpu_usage, process_mem_usage, process_rd_usage, process_wd_usage,
+                    process_iops_usage, process_network_io_usage))
 
-                    process_cpu_total += float(json_line['cpu'])
-                    process_mem_total += float(json_line['RSS']) / 1024
-                    process_rd_total += float(json_line['kB_rd'])
-                    process_wd_total += float(json_line['kB_wr'])
-                    process_cpu_usage.append(float(json_line['cpu']))
-                    process_mem_usage.append(float(json_line['RSS']) / 1024)
-                    process_rd_usage.append(json_line['kB_rd'])
-                    process_wd_usage.append(json_line['kB_wr'])
+            process_average_cpu = process_cpu_total / test_time
+            process_average_mem = process_mem_total / test_time
+            process_average_rd = process_rd_total / test_time
+            process_average_wd = process_wd_total / test_time
+            process_average_iops = process_iops_total / test_time
+            process_average_network_io = process_network_io_total / test_time
 
-                    line = f.readline().strip()
+            func_average_cpu += process_average_cpu
+            func_average_mem += process_average_mem
+            func_average_rd += process_average_rd
+            func_average_wd += process_average_wd
+            func_average_iops += process_average_iops
+            func_average_network_io += process_average_network_io
 
-                f.close()
+            row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s | {:.2f} | {:.2f} \n" \
+                .format(self.target_processes[index], process_average_cpu, process_average_mem, process_average_rd,
+                        process_average_wd, process_average_iops, process_average_network_io)
+            result_f.write(row)
 
-                # 将当前进程的性能数据放入列表中
-                processes_pf_list.append(
-                    zip(process_time, process_cpu_usage, process_mem_usage, process_rd_usage, process_wd_usage))
+        total_row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s | {:.2f} | {:.2f} \n". \
+            format("全部进程", func_average_cpu, func_average_mem, func_average_rd, func_average_wd, func_average_iops,
+                   func_average_network_io)
+        result_f.write(total_row)
 
-                process_average_cpu = process_cpu_total / test_time
-                process_average_mem = process_mem_total / test_time
-                process_average_rd = process_rd_total / test_time
-                process_average_wd = process_wd_total / test_time
-
-                func_average_cpu += process_average_cpu
-                func_average_mem += process_average_mem
-                func_average_rd += process_average_rd
-                func_average_wd += process_average_wd
-
-                row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s \n".format(self.target_processes[index],
-                                                                                      process_average_cpu,
-                                                                                      process_average_mem,
-                                                                                      process_average_rd,
-                                                                                      process_average_wd)
-                result_f.write(row)
-
-                # with open(file_path, 'a', encoding='utf-8') as f:
-                #     f.write("进程{}:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %"
-                #             .format(self.target_processes[index], process_average_cpu, process_average_mem) + '\n\n')
-                # print("进程{}:\naverage_cpu: {:.2f} %, average_mem: {:.2f} %"
-                #       .format(self.target_processes[index], process_average_cpu, process_average_mem))
+        # 写入最大值
+        header = "| 进程名 | vcpu最高占用率 | RSS最大值 | 读数据最高速率 | 写数据最高速率 | IOPS最大值 | network_io最大值 \n" \
+                 "| --- | --- | --- | --- | --- | --- | --- |\n"
+        result_f.write(header)
 
         # 绘制单个进程消耗的曲线
         func_cpu_data = {x: 0 for x in range(test_time + 1)}
         func_mem_data = {x: 0 for x in range(test_time + 1)}
+        func_rd_data = {x: 0 for x in range(test_time + 1)}
+        func_wd_data = {x: 0 for x in range(test_time + 1)}
+        func_iops_data = {x: 0 for x in range(test_time + 1)}
+        func_network_io_data = {x: 0 for x in range(test_time + 1)}
+
         for index in range(len(processes_pf_list)):
             process_cpu_data = {x: 0 for x in range(test_time + 1)}
             process_mem_data = {x: 0 for x in range(test_time + 1)}
-            for time, cpu, mem, rd, wd in processes_pf_list[index]:
+            process_rd_data = {x: 0 for x in range(test_time + 1)}
+            process_wd_data = {x: 0 for x in range(test_time + 1)}
+            process_iops_data = {x: 0 for x in range(test_time + 1)}
+            process_network_io_data = {x: 0 for x in range(test_time + 1)}
+
+            for time, cpu, mem, rd, wd, iops, network_io in processes_pf_list[index]:
                 func_cpu_data[time] += cpu
                 func_mem_data[time] += mem
+                func_rd_data[time] += rd
+                func_wd_data[time] += wd
+                func_iops_data[time] += iops
+                func_network_io_data[time] += network_io
+
                 process_cpu_data[time] += cpu
                 process_mem_data[time] += mem
+                process_rd_data[time] += rd
+                process_wd_data[time] += wd
+                process_iops_data[time] += iops
+                process_network_io_data[time] += network_io
 
             axs[0, 0].plot(list(process_cpu_data.keys()), list(process_cpu_data.values()),
                            label=self.target_processes[index])
             axs[0, 1].plot(list(process_mem_data.keys()), list(process_mem_data.values()),
                            label=self.target_processes[index])
+            axs[2, 0].plot(list(process_rd_data.keys()), list(process_rd_data.values()),
+                           label=self.target_processes[index])
+            axs[2, 1].plot(list(process_wd_data.keys()), list(process_wd_data.values()),
+                           label=self.target_processes[index])
+            axs[4, 0].plot(list(process_iops_data.keys()), list(process_iops_data.values()),
+                           label=self.target_processes[index])
+            axs[4, 1].plot(list(process_network_io_data.keys()), list(process_network_io_data.values()),
+                           label=self.target_processes[index])
+
+            row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s | {:.2f} | {:.2f} \n" \
+                .format(self.target_processes[index], max(process_cpu_data.values()), max(process_mem_data.values()),
+                        max(process_rd_data.values()), max(process_wd_data.values()), max(process_iops_data.values()),
+                        max(process_network_io_data.values()))
+            result_f.write(row)
+
+        total_row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s | {:.2f} | {:.2f} \n". \
+            format("全部进程", max(func_cpu_data.values()), max(func_mem_data.values()),
+                   max(func_rd_data.values()), max(func_wd_data.values()), max(func_iops_data.values()),
+                   max(func_network_io_data.values()))
+        result_f.write(total_row)
 
         # 绘制总资源消耗的曲线
         axs[1, 0].plot(list(func_cpu_data.keys()), list(func_cpu_data.values()),
                        label='total')
         axs[1, 1].plot(list(func_mem_data.keys()), list(func_mem_data.values()),
                        label='total')
+        axs[3, 0].plot(list(func_rd_data.keys()), list(func_rd_data.values()),
+                       label='total')
+        axs[3, 1].plot(list(func_wd_data.keys()), list(func_wd_data.values()),
+                       label='total')
+        axs[5, 0].plot(list(func_iops_data.keys()), list(func_iops_data.values()),
+                       label='total')
+        axs[5, 1].plot(list(func_network_io_data.keys()), list(func_network_io_data.values()),
+                       label='total')
 
         # 设置子图标题、轴标签和图例
-        axs[0, 0].set_xlabel('time (seconds)')
-        axs[0, 1].set_xlabel('time (seconds)')
+        for i in range(6):  # 6行
+            for j in range(2):  # 2列
+                axs[i, j].set_xlabel('time (seconds)')
+
         axs[0, 0].set_ylabel('vcpu (%)')
+        axs[1, 0].set_ylabel('vcpu (%)')
         axs[0, 1].set_ylabel('RSS (MB)')
+        axs[1, 1].set_ylabel('RSS (MB)')
+        axs[2, 0].set_ylabel('rd (KB/s)')
+        axs[3, 0].set_ylabel('rd (KB/s)')
+        axs[2, 1].set_ylabel('wd (KB/s)')
+        axs[3, 1].set_ylabel('wd (KB/s)')
+        axs[4, 0].set_ylabel('iops')
+        axs[5, 0].set_ylabel('iops')
+        axs[4, 1].set_ylabel('network_io')
+        axs[5, 1].set_ylabel('network_io')
+
         axs[0, 0].set_title('process CPU usage')
         axs[0, 1].set_title('process MEM usage')
-        axs[0, 0].legend()
-        axs[0, 1].legend()
-
-        axs[1, 0].set_xlabel('time (seconds)')
-        axs[1, 0].set_ylabel('vcpu (%)')
-        axs[1, 1].set_xlabel('time (seconds)')
-        axs[1, 1].set_ylabel('RSS (MB)')
         axs[1, 0].set_title('total CPU usage')
         axs[1, 1].set_title('total MEM usage')
+        axs[2, 0].set_title('process RD usage')
+        axs[2, 1].set_title('process WD usage')
+        axs[3, 0].set_title('total RD usage')
+        axs[3, 1].set_title('total WD usage')
+        axs[4, 0].set_title('process iops usage')
+        axs[4, 1].set_title('process network_io usage')
+        axs[5, 0].set_title('total iops usage')
+        axs[5, 1].set_title('total network_io usage')
+
+        for i in range(6):  # 6行
+            for j in range(2):  # 2列
+                axs[i, j].legend()
 
         plt.tight_layout()
         fig_path = os.path.join(self.dir, f'{test_function}.png')
         # 保存图片
         plt.savefig(fig_path, dpi=300)
-        with open(file_path, 'a', encoding='utf-8') as f:
-            row = "| {} | {:.2f}% | {:.2f}MB | {:.2f}KB/s | {:.2f}KB/s \n".format("全部进程", func_average_cpu,
-                                                                                  func_average_mem, func_average_rd,
-                                                                                  func_average_wd)
-            f.write(row)
-            f.write(f"### {self.translation[test_function]}性能数据图：" + '\n\n')
-            alt_text = "vul_scan_fig"
-            f.write(f"![{alt_text}]({fig_path})\n")
+
+        result_f.write(f"### {self.translation[test_function]}性能数据图：" + '\n\n')
+        alt_text = "fig"
+        result_f.write(f"![{alt_text}]({fig_path})\n")
+        result_f.close()
 
     @staticmethod
     def turn_database_to_table(database, query):
