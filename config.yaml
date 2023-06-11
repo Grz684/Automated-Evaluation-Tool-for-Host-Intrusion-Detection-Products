@@ -1,11 +1,11 @@
 attackinfo:
-  ssh_hostname: 10.10.21.133
+  ssh_hostname: 10.10.21.124
   ssh_username: ubuntu
   ssh_password: "010404grz"
   root_username: root
   root_password: "010404"
   attack_pattern: 2
-  attack_target: T1014
+  attack_target: T1480.001
   assist_hostname: 10.10.21.232
   assist_username: grz
   assist_password: "010404grz"
@@ -20,7 +20,7 @@ pfinfo:
     ssh_password: '010404'
     manage_center_ip: 10.10.21.119
     token: 495d75c06c564a0aa5d0755b9f00010c
-    uuid: 154bbc80eac2a8a32e6c289227e3873e
+    uuid: 906bb2625590112971a5c37f77d603c1
 
   aliyun_agent:
      ssh_hostname: 10.10.21.106
@@ -38,8 +38,8 @@ pfinfo:
      accessKeySecret: MckjeP0QfhYCg2tX5RiKrCMN4iCZlolY
      uuid: ebb72142-e05d-e812-505e-05bf0d7b4907
 
-  hisec_agent:
-    ssh_hostname: 10.10.21.124
+  hss_agent:
+    ssh_hostname: 10.10.21.133
     ssh_username: root
     ssh_password: '010404'
 

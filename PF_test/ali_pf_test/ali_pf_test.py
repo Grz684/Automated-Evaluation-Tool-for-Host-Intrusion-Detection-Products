@@ -23,8 +23,7 @@ class AliPFTest:
         self.ssh_hostname = ssh_hostname
         self.ssh_username = ssh_username
         self.ssh_password = ssh_password
-        self.ali_target_processes = ["AliDetect", "AliYunDunUpdate", "AliYunDun", "AliYunDunMonitor", "AliSecGuard",
-                                     "AliHips", "AliNet", "AliSecureCheckAdvanced"]
+        self.ali_target_processes = ["AliDetect", "AliYunDunUpdate", "AliYunDun", "AliYunDunMonitor", "AliSecureCheckAdvanced"]
         self.ali_test_functions = ["nothing_open", "self_protection", "Web_backdoor_connection_defense",
                                    "Network_defense", "anti_virus",
                                    "vul_scan", "assets_scan", "virus_scan", "baseline_scan"]
@@ -33,17 +32,17 @@ class AliPFTest:
         self.accessKeySecret = accessKeySecret
         self.uuid = uuid
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.command_file_path = os.path.join(self.script_dir, '../..', 'pf_test_commands.txt')
+        self.command_file_path = os.path.join(self.script_dir, '..', 'pf_test_commands.txt')
         self.ali_dir_path = os.path.join(self.script_dir, 'ali')
 
-        self.ali_translation = {"vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "virus_scan": "病毒扫描",
+        self.ali_translation = {"nothing_open": "无功能开启", "vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "virus_scan": "病毒扫描",
                                     "baseline_scan": "基线扫描"}
         self.baseline_database = os.path.join(self.script_dir, "ali_cis_baseline_scan_items.db")
 
         self.pf_util = PFUtil(self.ali_test_functions, self.ali_dir_path, self.ali_target_processes,
-                              self.ali_translation)
+                              self.ali_translation, self.ssh_hostname, self.ssh_username, self.ssh_password, "aegis", "ali")
         self.handle_test_data = self.pf_util.handle_test_data
-        self.display_test_data = self.pf_util.display_test_data
+        self.display_test_data = self.pf_util.display_test_data_new
 
 
     def ali_agent_func_pf_test(self, function_id, test_time=30):
@@ -59,40 +58,13 @@ class AliPFTest:
             # 1秒检查一次
             time.sleep(1)
 
+        ssh.close()
+
         # 后台挂起检测任务
         print(f"{test_function}场景已建立，开始采集性能数据.....")
-        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_without_stdout_infile(self.command_file_path, 4)
-        ssh_task.close()
-
-        if function_id >= 5:
-            # 扫描情况
-            while True:
-                stop_flag = not self.check_current_status(test_function, ssh)
-                # print("stop_flag: " + str(stop_flag))
-                if stop_flag:
-                    break
-                # 1秒检查一次
-                time.sleep(1)
-        else:
-            time.sleep(test_time)
-
-        # 结束检测任务
-        print(f"本场景已结束，正在停止采集性能数据.....")
-        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_infile(self.command_file_path, 5)
-        ssh_task.close()
-        # 获取检测结果
-        time.sleep(5)
-        ini_test_result = ssh.exec_command_infile(self.command_file_path, 7)
-        ini_test_result = ini_test_result.decode().strip()
-
-        os.makedirs(self.ali_dir_path, exist_ok=True)
-        file_name = os.path.join(self.ali_dir_path, "init_" + test_function + ".txt")
-        f = open(file_name, mode='w', encoding='utf-8')
-        f.write(ini_test_result)
-        ssh.close()
-        f.close()
+        ali.pf_util.start_test(function_id)
+        time.sleep(300)
+        ali.pf_util.end_test(function_id)
 
     def check_current_status(self, test_function, ssh):
         # 得到正在运行的process
@@ -197,8 +169,10 @@ class AliPFTest:
 
     def ali_pf_test_nothing(self):
         self.ali_agent_func_pf_test(0)
-        self.handle_test_data(0)
-        self.display_test_data(0)
+        ali.pf_util.handle_pidstat_data(0)
+        ali.pf_util.handle_bio_data(0)
+        ali.pf_util.handle_btcp_data(0)
+        ali.display_test_data(0)
 
     def ali_pf_test_vul(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
@@ -216,17 +190,21 @@ class AliPFTest:
 
     def ali_pf_test_virus(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        # aliapi.start_virus_scan_task()
-        # self.ali_agent_func_pf_test(7)
-        self.handle_test_data(7)
-        self.display_test_data(7)
+        aliapi.start_virus_scan_task()
+        self.ali_agent_func_pf_test(7)
+        ali.pf_util.handle_pidstat_data(7)
+        ali.pf_util.handle_bio_data(7)
+        ali.pf_util.handle_btcp_data(7)
+        ali.display_test_data(7)
 
     def ali_pf_test_baseline(self):
         aliapi = AliApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        # aliapi.baseline_scan()
-        # self.ali_agent_func_pf_test(8)
-        self.handle_test_data(8)
-        self.display_test_data(8)
+        aliapi.baseline_scan()
+        self.ali_agent_func_pf_test(8)
+        ali.pf_util.handle_pidstat_data(8)
+        ali.pf_util.handle_bio_data(8)
+        ali.pf_util.handle_btcp_data(8)
+        ali.display_test_data(8)
 
 if __name__ == '__main__':
     with open("../../config.yaml", "r") as f:
@@ -239,4 +217,4 @@ if __name__ == '__main__':
     accessKeySecret = str(agent["accessKeySecret"])
     uuid = str(agent["uuid"])
     ali = AliPFTest(ssh_hostname, ssh_username, ssh_password, accessKeyId, accessKeySecret, uuid)
-    ali.ali_pf_test_assets()
+    ali.ali_pf_test_virus()

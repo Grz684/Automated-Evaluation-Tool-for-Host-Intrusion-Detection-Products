@@ -1,0 +1,123 @@
+Tracing... Output every 10 secs. Hit Ctrl-C to end
+
+03:30:07 loadavg: 0.40 0.10 0.12 1/336 7825
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:30:17 loadavg: 0.34 0.09 0.12 1/336 7849
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:30:27 loadavg: 0.29 0.09 0.12 1/335 7873
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:30:37 loadavg: 0.24 0.09 0.12 1/335 7897
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:30:47 loadavg: 0.20 0.08 0.12 1/335 7921
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:30:57 loadavg: 0.25 0.10 0.12 1/335 7945
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+878     wsssr_defence_d  W 8   0   sda          1     4.0  25.72
+
+03:31:07 loadavg: 0.21 0.09 0.12 1/335 7969
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:31:17 loadavg: 0.18 0.09 0.12 1/335 7993
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:31:27 loadavg: 0.15 0.08 0.12 5/338 8021
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:31:37 loadavg: 0.12 0.08 0.11 1/335 8027
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:31:47 loadavg: 0.10 0.08 0.11 1/335 8051
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:31:57 loadavg: 0.17 0.09 0.12 1/335 8075
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:32:07 loadavg: 0.14 0.09 0.11 1/335 8099
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:32:17 loadavg: 0.12 0.09 0.11 1/335 8123
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:32:27 loadavg: 0.10 0.08 0.11 1/335 8150
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:32:37 loadavg: 0.08 0.08 0.11 1/335 8174
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:32:47 loadavg: 0.07 0.08 0.11 1/335 8198
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:32:57 loadavg: 0.06 0.07 0.10 1/335 8230
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:33:07 loadavg: 0.05 0.07 0.10 1/335 8260
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:33:17 loadavg: 0.12 0.09 0.11 2/337 8323
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:33:27 loadavg: 0.17 0.10 0.11 1/336 8353
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:33:37 loadavg: 0.15 0.10 0.11 1/336 8377
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:33:48 loadavg: 0.12 0.09 0.11 1/336 8401
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:33:58 loadavg: 0.10 0.09 0.10 1/336 8425
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:34:08 loadavg: 0.09 0.08 0.10 1/336 8449
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:34:18 loadavg: 0.07 0.08 0.10 1/336 8473
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:34:28 loadavg: 0.06 0.08 0.10 1/336 8497
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:34:38 loadavg: 0.05 0.08 0.10 1/336 8521
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:34:48 loadavg: 0.04 0.07 0.09 1/336 8545
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+03:34:58 loadavg: 0.04 0.07 0.09 3/330 8704
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+Detaching...

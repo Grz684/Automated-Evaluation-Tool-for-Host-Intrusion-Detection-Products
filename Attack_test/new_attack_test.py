@@ -69,7 +69,7 @@ def read_commands_from_file(file_path):
 
 
 def prepare(command_file, client):
-    if command_file == os.path.join("Attack", "defense-evasion-try", "T1480.001"):
+    if command_file == os.path.join("Attack", "defense-evasion", "T1480.001"):
         script_path = os.path.join("attack_file", "T1480.001.py")
         input_file_path = os.path.join("attack_file", "meterpreter_reverse_tcp.elf")
         output_file_path = os.path.join("attack_file", "test_T1480_enc")

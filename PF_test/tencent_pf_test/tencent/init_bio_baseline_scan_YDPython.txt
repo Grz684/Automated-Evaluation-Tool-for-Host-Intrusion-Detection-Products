@@ -1,0 +1,125 @@
+Tracing... Output every 10 secs. Hit Ctrl-C to end
+
+11:23:44 loadavg: 0.83 0.73 0.38 3/321 52972
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:23:54 loadavg: 0.70 0.70 0.37 1/320 53388
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:24:04 loadavg: 0.83 0.73 0.38 4/321 53720
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:24:14 loadavg: 1.17 0.81 0.41 1/322 53850
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:24:24 loadavg: 1.13 0.81 0.42 2/319 53852
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:24:34 loadavg: 1.42 0.88 0.45 1/319 53853
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:24:44 loadavg: 1.66 0.95 0.48 1/320 53856
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:24:54 loadavg: 1.63 0.97 0.49 1/320 53858
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:25:04 loadavg: 1.68 1.00 0.50 2/320 53871
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:25:14 loadavg: 1.80 1.05 0.52 3/320 53873
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:25:24 loadavg: 1.53 1.02 0.52 2/320 53875
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:25:34 loadavg: 1.29 0.98 0.51 2/320 53876
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:25:44 loadavg: 1.09 0.95 0.51 1/320 53879
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:25:54 loadavg: 1.16 0.97 0.52 1/320 53896
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:26:04 loadavg: 0.98 0.94 0.51 1/320 53907
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:26:14 loadavg: 1.15 0.97 0.53 2/320 53928
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+52007   YDPython         R 8   0   sda          1     4.0  16.15
+
+11:26:24 loadavg: 1.27 1.01 0.55 1/310 54004
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:26:34 loadavg: 1.23 1.01 0.55 1/310 54005
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:26:44 loadavg: 1.19 1.01 0.56 2/310 54007
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:26:54 loadavg: 1.16 1.00 0.56 1/310 54009
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:27:04 loadavg: 1.06 0.99 0.56 1/310 54010
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:27:14 loadavg: 1.05 0.99 0.56 2/310 54012
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:27:24 loadavg: 0.96 0.97 0.56 1/310 54014
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:27:34 loadavg: 0.89 0.96 0.56 1/310 54020
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:27:44 loadavg: 0.76 0.92 0.56 1/305 54031
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+52007   YDPython         R 8   0   sda          1     4.0  24.03
+
+11:27:54 loadavg: 0.64 0.89 0.55 2/299 54033
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+52007   YDPython         R 8   0   sda          6    40.0  15.07
+
+11:28:04 loadavg: 0.54 0.86 0.54 1/297 54034
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:28:14 loadavg: 0.46 0.83 0.54 1/297 54036
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:28:24 loadavg: 0.39 0.81 0.53 1/297 54038
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+11:28:34 loadavg: 0.33 0.78 0.52 1/297 54135
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+Detaching...

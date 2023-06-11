@@ -18,13 +18,19 @@ class SSH:
         stdin, stdout, stderr = self.client.exec_command('bash')
         stdin.write(command)
         stdin.channel.shutdown_write()
-        res = stdout.read()
 
+        response = stdout.read()
+        error = stderr.read()
         stdin.close()
         stdout.close()
         stderr.close()
 
-        return res
+        if response:
+            response = response.decode('utf-8')
+        if error:
+            error = error.decode('utf-8')
+
+        return response
 
     def exec_command_without_stdout(self, command):
         stdin, stdout, stderr = self.client.exec_command('bash')

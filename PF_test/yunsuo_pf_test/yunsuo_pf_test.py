@@ -16,7 +16,7 @@ class YunSuoPFTest:
         self.yunsuo_target_processes = ["wsssr_defence_service", "wsssr_defence_daemon", "lbaselinescan", "icsfilesec"]
         self.yunsuo_test_functions = ["nothing_open", "vul_scan", "assets_scan", "malware_scan", "baseline_scan",
                                       "os_solid", "intrusion_detection"]
-        self.yunsuo_translation = {"vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "malware_scan": "病毒扫描",
+        self.yunsuo_translation = {"nothing_open": "无功能开启", "vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "malware_scan": "病毒扫描",
                             "baseline_scan": "基线扫描"}
         self.ssh_hostname = ssh_hostname
         self.ssh_username = ssh_username
@@ -31,65 +31,68 @@ class YunSuoPFTest:
         self.baseline_database = os.path.join(self.base_dir, "yunsuo_cis_baseline_scan_items.db")
 
         self.pf_util = PFUtil(self.yunsuo_test_functions, self.yunsuo_dir, self.yunsuo_target_processes,
-                              self.yunsuo_translation)
+                              self.yunsuo_translation, self.ssh_hostname, self.ssh_username, self.ssh_password, "wss", "yunsuo")
         self.handle_test_data = self.pf_util.handle_test_data
-        self.display_test_data = self.pf_util.display_test_data
+        self.display_test_data = self.pf_util.display_test_data_new
 
-    def yunsuo_agent_func_pf_test(self, function_id, task_uuid=None, test_time=30):
+    def yunsuo_agent_func_pf_test(self, function_id):
         test_function = self.yunsuo_test_functions[function_id]
         # 打开ssh连接
         ssh = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
 
         while True:
-            task_status = self.check_current_status(task_uuid)
+            task_status = self.check_current_status(test_function, ssh)
             # print("start_flag: " + str(start_flag))
-            if task_status == 1:
+            if task_status:
                 break
             # 1秒检查一次
             time.sleep(1)
 
-        # 后台挂起检测任务
-        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_without_stdout_infile(self.commands_file_path, 11)
-        ssh_task.close()
-
-        if function_id in [0, 5, 6]:
-            time.sleep(test_time)
-        else:
-            while True:
-                task_status = self.check_current_status(task_uuid)
-                # print("stop_flag: " + str(stop_flag))
-                if task_status == 2:
-                    break
-                # 1秒检查一次
-                time.sleep(1)
-
-        # 结束检测任务
-        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_infile(self.commands_file_path, 5)
-        ssh_task.close()
-        # 获取检测结果
-        time.sleep(5)
-        ini_test_result = ssh.exec_command_infile(self.commands_file_path, 7)
-        ini_test_result = ini_test_result.decode().strip()
-
-        os.makedirs(self.yunsuo_dir, exist_ok=True)
-        file_name = os.path.join(self.yunsuo_dir, f"init_{test_function}.txt")
-        f = open(file_name, mode='w', encoding='utf-8')
-        f.write(ini_test_result)
         ssh.close()
-        f.close()
+        # 后台挂起检测任务
+        print(f"{test_function}场景已建立，开始采集性能数据.....")
+        yunsuo.pf_util.start_test(function_id)
+        time.sleep(300)
+        yunsuo.pf_util.end_test(function_id)
 
-    def check_current_status(self, task_uuid):
-        yunsuo_api = YunSuoAPI(self.ssh_hostname, self.manage_center_ip, self.token, self.uuid, self.baseline_database)
-        try:
-            task_status = yunsuo_api.get_task_status(task_uuid)
-            print("任务状态：")
-            print(task_status)
-            return task_status
+    def check_current_status(self, test_function, ssh):
+        # 得到正在运行的process
+        process_paths = ssh.exec_command_infile(self.commands_file_path, 12)
+        process_paths = process_paths.decode().strip()
+        process_paths = process_paths.split("\n")
+        running_processes = []
+        for process_path in process_paths:
+            path = process_path.split("/")
+            running_processes.append(path[-1])
 
-        except Exception as e:
-            traceback.print_exc()
+        print(running_processes)
+
+        # 查看是否进入预设状态
+        # target_process_flag标志此轮数据中是否包含function对应进程，如包含则置为True
+        target_process_flag = False
+
+        # 静默状态
+        if test_function in [self.yunsuo_test_functions[0], self.yunsuo_test_functions[5],
+                             self.yunsuo_test_functions[6]]:
+            target_process_flag = True
+
+        # 漏洞、基线、资产扫描
+        if test_function in [self.yunsuo_test_functions[1], self.yunsuo_test_functions[2],
+                             self.yunsuo_test_functions[4]]:
+            if self.yunsuo_target_processes[2] in running_processes:
+                target_process_flag = True
+
+        # 病毒扫描
+        if test_function == self.yunsuo_test_functions[3]:
+            if self.yunsuo_target_processes[3] in running_processes:
+                target_process_flag = True
+
+        activ_status = False
+
+        if target_process_flag:
+            activ_status = True
+
+        return activ_status
 
     def yunsuo_pf_test_all_funcs(self):
         self.yunsuo_pf_test_nothing()
@@ -100,8 +103,10 @@ class YunSuoPFTest:
 
     def yunsuo_pf_test_nothing(self):
         self.yunsuo_agent_func_pf_test(0)
-        self.handle_test_data(0)
-        self.display_test_data(0)
+        yunsuo.pf_util.handle_pidstat_data(0)
+        yunsuo.pf_util.handle_bio_data(0)
+        yunsuo.pf_util.handle_btcp_data(0)
+        yunsuo.display_test_data(0)
 
     def yunsuo_pf_test_vul(self):
         yunsuo_api = YunSuoAPI(self.ssh_hostname, self.manage_center_ip, self.token, self.uuid, self.baseline_database)
@@ -139,22 +144,25 @@ class YunSuoPFTest:
 
     def yunsuo_pf_test_virus(self):
         self.yunsuo_agent_func_pf_test(3)
-        self.handle_test_data(3)
-        self.display_test_data(3)
+        yunsuo.pf_util.handle_pidstat_data(3)
+        yunsuo.pf_util.handle_bio_data(3)
+        yunsuo.pf_util.handle_btcp_data(3)
+        yunsuo.display_test_data(3)
 
     def yunsuo_pf_test_baseline(self):
         yunsuo_api = YunSuoAPI(self.ssh_hostname, self.manage_center_ip, self.token, self.uuid, self.baseline_database)
         try:
-            # task_uuid = yunsuo_api.create_baseline_scan_task()
-            # print("任务创建成功，任务UUID：")
-            # print(task_uuid)
-            # self.yunsuo_agent_func_pf_test(4, task_uuid)
-            task_uuid = "f58a6a11d4eb469c9a01db0d7af7849e"
-            self.handle_test_data(4)
-            self.display_test_data(4)
+            task_uuid = yunsuo_api.create_baseline_scan_task()
+            print("任务创建成功，任务UUID：")
+            print(task_uuid)
+            self.yunsuo_agent_func_pf_test(4)
+            yunsuo.pf_util.handle_pidstat_data(4)
+            yunsuo.pf_util.handle_bio_data(4)
+            yunsuo.pf_util.handle_btcp_data(4)
+            yunsuo.display_test_data(4)
             # 获取相应功能的扫描结果
-            file_path = os.path.join(self.yunsuo_dir, 'baseline_scan_result.md')
-            self.get_baseline_scan_result(task_uuid, file_path)
+            # file_path = os.path.join(self.yunsuo_dir, 'baseline_scan_result.md')
+            # self.get_baseline_scan_result(task_uuid, file_path)
         except Exception as e:
             print("错误信息：")
             traceback.print_exc()
@@ -240,9 +248,10 @@ if __name__ == '__main__':
     token = str(agent["token"])
     uuid = str(agent["uuid"])
     yunsuo = YunSuoPFTest(ssh_hostname, ssh_username, ssh_password, uuid, manage_center_ip, token)
+    yunsuo.yunsuo_pf_test_virus()
     # 测试漏洞扫描：yunsuo.display_test_data(1, "49097f65993f4bb6a3ef8628bf4bc492")
     # 测试资产扫描：yunsuo.display_test_data(2, "bc3b24ce2b8344b1b95a58cc564a7f8d")
     # 基线扫描"f58a6a11d4eb469c9a01db0d7af7849e"
-    yunsuo.yunsuo_pf_test_baseline()
-    yunsuo.yunsuo_pf_test_vul()
-    yunsuo.yunsuo_pf_test_assets()
+    # yunsuo.yunsuo_pf_test_baseline()
+    # yunsuo.yunsuo_pf_test_vul()
+    # yunsuo.yunsuo_pf_test_assets()

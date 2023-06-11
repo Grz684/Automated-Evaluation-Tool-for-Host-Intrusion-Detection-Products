@@ -3,4 +3,4 @@ Elevation Required;
 echo "%password%" | sudo -S sh -c '((which yum && sudo yum -y install epel-release nmap) || (which apt-get && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nmap))'
 #check
 echo "使用Nmap扫描当前网段下哪些地址的主机开启了80端口："
-sudo nmap -sS 10.10.21.0/24 -p 80
+sudo nmap -sS 10.10.21.0/24 -p 4444

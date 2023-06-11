@@ -1,0 +1,154 @@
+Tracing... Output every 10 secs. Hit Ctrl-C to end
+
+09:55:42 loadavg: 0.71 0.23 0.07 1/297 48591
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        R 8   0   sda          2    32.0   5.37
+46607   YDService        W 8   0   sda          3    24.0  31.44
+
+09:55:52 loadavg: 0.60 0.22 0.07 2/297 48595
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  14.93
+
+09:56:02 loadavg: 0.51 0.22 0.07 1/297 48597
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  17.78
+
+09:56:12 loadavg: 0.51 0.22 0.08 1/297 48598
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  14.37
+
+09:56:22 loadavg: 0.43 0.22 0.07 1/297 48600
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  18.42
+
+09:56:32 loadavg: 0.37 0.21 0.07 2/297 48602
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+09:56:42 loadavg: 0.31 0.20 0.07 1/297 48603
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  22.32
+
+09:56:52 loadavg: 0.26 0.20 0.07 1/297 48605
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  22.43
+
+09:57:02 loadavg: 0.22 0.19 0.07 1/297 48607
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  15.04
+
+09:57:12 loadavg: 0.19 0.18 0.07 1/297 48608
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  18.02
+
+09:57:22 loadavg: 0.16 0.17 0.07 1/297 48610
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  17.67
+
+09:57:32 loadavg: 0.13 0.17 0.07 1/297 48612
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  21.60
+
+09:57:42 loadavg: 0.11 0.16 0.07 1/297 48613
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  35.96
+
+09:57:52 loadavg: 0.09 0.16 0.07 1/297 48615
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0 152.21
+
+09:58:02 loadavg: 0.16 0.17 0.07 1/297 48617
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  54.61
+
+09:58:12 loadavg: 0.13 0.16 0.07 1/297 48619
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          2    16.0  85.28
+
+09:58:22 loadavg: 0.19 0.17 0.07 1/297 48621
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          1     8.0  18.68
+
+09:58:32 loadavg: 0.16 0.17 0.07 2/297 48624
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  87.90
+
+09:58:42 loadavg: 0.13 0.16 0.07 1/297 48626
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  46.48
+
+09:58:52 loadavg: 0.19 0.17 0.08 1/297 48628
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  16.51
+
+09:59:02 loadavg: 0.16 0.17 0.08 1/297 48630
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  66.75
+
+09:59:12 loadavg: 0.13 0.16 0.08 1/297 48631
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  19.21
+
+09:59:22 loadavg: 0.19 0.17 0.08 1/297 48633
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  22.08
+
+09:59:32 loadavg: 0.16 0.17 0.08 3/297 48635
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  71.32
+
+09:59:42 loadavg: 0.14 0.16 0.08 1/297 48636
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  18.49
+
+09:59:52 loadavg: 0.12 0.15 0.08 3/297 48638
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          2    16.0  57.14
+
+10:00:02 loadavg: 0.10 0.15 0.08 2/298 48659
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          1     8.0  40.92
+46607   YDService        R 8   0   sda          1     4.0  17.14
+
+10:00:12 loadavg: 0.40 0.21 0.10 1/297 48660
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  33.49
+
+10:00:22 loadavg: 0.34 0.20 0.10 3/297 48662
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  37.37
+
+10:00:32 loadavg: 0.29 0.20 0.09 1/299 48771
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+46607   YDService        W 8   0   sda          3    24.0  15.82
+46607   YDService        R 8   0   sda          1     4.0  68.72
+Detaching...

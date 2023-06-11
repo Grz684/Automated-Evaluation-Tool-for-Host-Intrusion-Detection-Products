@@ -1,0 +1,133 @@
+Tracing... Output every 10 secs. Hit Ctrl-C to end
+
+01:50:20 loadavg: 0.94 0.24 0.07 1/296 24913
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:50:30 loadavg: 0.79 0.24 0.07 1/296 24935
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:50:40 loadavg: 0.67 0.23 0.07 1/296 24971
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0  23.40
+
+01:50:50 loadavg: 0.57 0.22 0.07 1/293 24987
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:51:00 loadavg: 0.48 0.21 0.07 1/293 24987
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:51:10 loadavg: 0.40 0.20 0.07 1/293 24988
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0  17.24
+
+01:51:20 loadavg: 0.34 0.20 0.07 1/293 24988
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:51:30 loadavg: 0.29 0.19 0.07 1/293 24988
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:51:40 loadavg: 0.24 0.18 0.07 1/293 24988
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0   7.36
+
+01:51:50 loadavg: 0.21 0.18 0.07 1/293 24988
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:52:00 loadavg: 0.17 0.17 0.06 1/293 24990
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:52:10 loadavg: 0.15 0.16 0.06 1/293 24990
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0  13.29
+
+01:52:20 loadavg: 0.12 0.16 0.06 1/293 24991
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0  28.10
+
+01:52:30 loadavg: 0.10 0.15 0.06 1/293 24991
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:52:40 loadavg: 0.09 0.15 0.06 1/293 24991
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0   9.35
+
+01:52:50 loadavg: 0.07 0.14 0.06 1/294 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:53:00 loadavg: 0.14 0.15 0.06 1/293 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:53:10 loadavg: 0.11 0.15 0.06 1/293 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0   8.09
+
+01:53:20 loadavg: 0.10 0.14 0.06 1/293 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:53:30 loadavg: 0.15 0.15 0.07 1/292 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:53:40 loadavg: 0.13 0.15 0.07 1/292 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0   9.76
+
+01:53:50 loadavg: 0.11 0.14 0.07 1/292 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:54:00 loadavg: 0.09 0.14 0.06 1/292 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:54:10 loadavg: 0.08 0.13 0.06 1/292 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0  15.79
+
+01:54:20 loadavg: 0.07 0.13 0.06 1/292 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:54:30 loadavg: 0.06 0.12 0.06 1/291 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:54:40 loadavg: 0.05 0.12 0.06 1/291 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0   8.20
+
+01:54:50 loadavg: 0.04 0.11 0.06 1/291 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:55:00 loadavg: 0.03 0.11 0.06 1/291 24992
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+
+01:55:10 loadavg: 0.10 0.12 0.06 1/289 25094
+
+PID     COMM             D MAJ MIN DISK       I/O  Kbytes  AVGms
+22796   hostguard        W 8   0   sda          1     4.0  14.31
+Detaching...

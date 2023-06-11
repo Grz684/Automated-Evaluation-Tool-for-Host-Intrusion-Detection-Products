@@ -244,7 +244,7 @@ class AliApi:
         # 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378659.html
         client = AliApi.create_client(self.accessKeyId, self.accessKeySecret)
         exec_strategy_request = sas_20181203_models.ExecStrategyRequest(
-            strategy_id=44458599,
+            strategy_id=39517894,
             lang='en'
         )
         runtime = util_models.RuntimeOptions()

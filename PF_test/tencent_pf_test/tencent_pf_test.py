@@ -11,6 +11,7 @@ import os
 from tencentapi import TencentApi
 import json
 
+
 # 测试功能id
 # 无 0
 # web_cms_scan 1
@@ -28,7 +29,7 @@ class TencentPFTest:
         self.ssh_hostname = ssh_hostname
         self.ssh_username = ssh_username
         self.ssh_password = ssh_password
-        self.tencent_target_processes = ["YDService", "YDLive", "YDPython", "YDFlame", "YDUtils"]
+        self.tencent_target_processes = ["YDService", "YDLive", "YDPython", "YDUtils"]
         self.tencent_test_functions = ["nothing_open", "vul_scan", "assets_scan", "malware_scan", "baseline_scan"]
         self.accessKeyId = accessKeyId
         self.accessKeySecret = accessKeySecret
@@ -36,14 +37,15 @@ class TencentPFTest:
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.commands_file_path = os.path.join(self.base_dir, '..', "pf_test_commands.txt")
         self.tencent_dir = os.path.join(self.base_dir, "tencent")
-        self.tencent_translation = {"vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "malware_scan": "病毒扫描",
-                            "baseline_scan": "基线扫描"}
+        self.tencent_translation = {"nothing_open": "无功能开启", "vul_scan": "漏洞扫描", "assets_scan": "资产扫描", "malware_scan": "病毒扫描",
+                                    "baseline_scan": "基线扫描"}
         self.baseline_database = os.path.join(self.base_dir, "tencent_cis_baseline_scan_items.db")
 
         self.pf_util = PFUtil(self.tencent_test_functions, self.tencent_dir, self.tencent_target_processes,
-                              self.tencent_translation)
+                              self.tencent_translation, self.ssh_hostname, self.ssh_username, self.ssh_password, "YD",
+                              "tencent")
         self.handle_test_data = self.pf_util.handle_test_data
-        self.display_test_data = self.pf_util.display_test_data
+        self.display_test_data = self.pf_util.display_test_data_new
 
     def tencent_agent_func_pf_test(self, function_id, test_time=30):
         test_function = self.tencent_test_functions[function_id]
@@ -61,46 +63,12 @@ class TencentPFTest:
                 # 1秒检查一次
                 time.sleep(1)
 
-        # 后台挂起检测任务
-        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_without_stdout_infile(self.commands_file_path, 9)
-        ssh_task.close()
-
-        if function_id == 3:
-            while True:
-                start_flag = self.check_current_status(test_function, ssh)
-                # print("start_flag: " + str(start_flag))
-                if start_flag:
-                    break
-                # 1秒检查一次
-                time.sleep(1)
-
-        if function_id == 0:
-            time.sleep(test_time)
-        else:
-            while True:
-                stop_flag = not self.check_current_status(test_function, ssh)
-                # print("stop_flag: " + str(stop_flag))
-                if stop_flag:
-                    break
-                # 1秒检查一次
-                time.sleep(1)
-
-        # 结束检测任务
-        ssh_task = SSH(self.ssh_hostname, self.ssh_username, self.ssh_password)
-        ssh_task.exec_command_infile(self.commands_file_path, 5)
-        ssh_task.close()
-        # 获取检测结果
-        time.sleep(5)
-        ini_test_result = ssh.exec_command_infile(self.commands_file_path, 7)
-        ini_test_result = ini_test_result.decode().strip()
-
-        os.makedirs(self.tencent_dir, exist_ok=True)
-        file_name = os.path.join(self.tencent_dir, f"init_{test_function}.txt")
-        f = open(file_name, mode='w', encoding='utf-8')
-        f.write(ini_test_result)
         ssh.close()
-        f.close()
+        # 后台挂起检测任务
+        print(f"{test_function}场景已建立，开始采集性能数据.....")
+        tencent.pf_util.start_test(function_id)
+        time.sleep(300)
+        tencent.pf_util.end_test(function_id)
 
     def check_current_status(self, test_function, ssh):
         # 得到正在运行的process
@@ -125,14 +93,9 @@ class TencentPFTest:
             if self.tencent_target_processes[2] in running_processes:
                 target_process_flag = True
 
-        # 资产采集
-        if test_function == self.tencent_test_functions[2]:
-            if self.tencent_target_processes[3] in running_processes:
-                target_process_flag = True
-
         # 恶意软件扫描
         if test_function == self.tencent_test_functions[3]:
-            if self.tencent_target_processes[4] in running_processes:
+            if self.tencent_target_processes[3] in running_processes:
                 target_process_flag = True
 
         # 基线扫描
@@ -156,8 +119,10 @@ class TencentPFTest:
 
     def tencent_pf_test_nothing(self):
         self.tencent_agent_func_pf_test(0)
-        self.handle_test_data(0)
-        self.display_test_data(0)
+        tencent.pf_util.handle_pidstat_data(0)
+        tencent.pf_util.handle_bio_data(0)
+        tencent.pf_util.handle_btcp_data(0)
+        tencent.display_test_data(0)
 
     def tencent_pf_test_vul(self):
         tencentapi = TencentApi(self.accessKeyId, self.accessKeySecret, self.uuid)
@@ -181,20 +146,26 @@ class TencentPFTest:
 
     def tencent_pf_test_virus(self):
         tencentapi = TencentApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        # tencentapi.scan_malware()
-        # self.tencent_agent_func_pf_test(3)
-        self.handle_test_data(3)
-        self.display_test_data(3)
+        tencentapi.scan_malware()
+
+        self.tencent_agent_func_pf_test(3)
+        tencent.pf_util.handle_pidstat_data(3)
+        tencent.pf_util.handle_bio_data(3)
+        tencent.pf_util.handle_btcp_data(3)
+        tencent.display_test_data(3)
 
     def tencent_pf_test_baseline(self):
         tencentapi = TencentApi(self.accessKeyId, self.accessKeySecret, self.uuid)
-        # tencentapi.start_baseline_detect()
-        # self.tencent_agent_func_pf_test(4)
-        self.handle_test_data(4)
-        self.display_test_data(4)
+        tencentapi.start_baseline_detect()
+
+        self.tencent_agent_func_pf_test(4)
+        tencent.pf_util.handle_pidstat_data(4)
+        tencent.pf_util.handle_bio_data(4)
+        tencent.pf_util.handle_btcp_data(4)
+        tencent.display_test_data(4)
         # 获取相应功能的扫描结果
-        result_file_path = os.path.join(self.tencent_dir, 'baseline_scan_result.md')
-        self.get_baseline_scan_result(result_file_path)
+        # result_file_path = os.path.join(self.tencent_dir, 'baseline_scan_result.md')
+        # self.get_baseline_scan_result(result_file_path)
 
     def get_vul_scan_result(self, file_path):
         tencentapi = TencentApi(self.accessKeyId, self.accessKeySecret, self.uuid)
